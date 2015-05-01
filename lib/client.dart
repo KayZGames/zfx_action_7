@@ -1,7 +1,9 @@
 library client;
 
 import 'dart:html' hide Player, Timeline;
-export 'dart:html' hide Player, Timeline;
+import 'dart:web_audio';
+import 'dart:typed_data';
+import 'dart:web_gl';
 
 import 'package:zfx_action_7/shared.dart';
 
@@ -11,21 +13,28 @@ export 'package:gamedev_helpers/gamedev_helpers.dart';
 //part 'src/client/systems/name.dart';
 part 'src/client/systems/events.dart';
 part 'src/client/systems/rendering.dart';
+part 'src/client/systems/sound.dart';
 
 class Game extends GameBase {
+  AudioContext audioContext = new AudioContext();
+  Uint8List byteFrequencyData = new Uint8List(1024);
 
-  Game() : super.noAssets('zfx_action_7', 'canvas', 800, 600);
+  Game() : super.noAssets('zfx_action_7', 'canvas', 800, 600, webgl: true);
 
   void createEntities() {
-    // addEntity([Component1, Component2]);
   }
 
   List<EntitySystem> getSystems() {
     return [
-            new TweeningSystem(),
-            new CanvasCleaningSystem(canvas),
-            new FpsRenderingSystem(ctx),
-            new AnalyticsSystem(AnalyticsSystem.GITHUB, 'zfx_action_7')
+      new BlockSpawnerSystem(byteFrequencyData),
+      new BlockMovementSystem(),
+
+      new BackgroundMusicSystem(audioContext, byteFrequencyData),
+      new MusicVisualisationSystem(ctx, byteFrequencyData),
+      new EqualizerSystem(ctx, byteFrequencyData),
+      new BlockRenderingSystem(ctx),
+
+      new BlockDestructionSystem(),
     ];
   }
 }
