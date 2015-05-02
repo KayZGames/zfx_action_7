@@ -3,21 +3,28 @@ part of client;
 class MusicVisualisationSystem extends VoidEntitySystem {
   Uint8List byteFrequencyData;
   RenderingContext gl;
+  InputElement preventHeadache = querySelector('#preventHeadache');
 
   MusicVisualisationSystem(this.gl, this.byteFrequencyData);
 
   @override
   void processSystem() {
-    var red = byteFrequencyData.getRange(0, byteFrequencyData.length ~/ 2).reduce(sum) ~/ byteFrequencyData.length;
-    var green = byteFrequencyData
-            .getRange(byteFrequencyData.length ~/ 4, 3 * byteFrequencyData.length ~/ 4)
-            .reduce(sum) ~/
-        byteFrequencyData.length;
-    var blue = byteFrequencyData.getRange(byteFrequencyData.length ~/ 2, byteFrequencyData.length).reduce(sum) ~/
-        byteFrequencyData.length;
-    gl.clearColor(red / 256, green / 256, blue / 256, 1.0);
-    gl.clear(RenderingContext.COLOR_BUFFER_BIT | RenderingContext.DEPTH_BUFFER_BIT);
-    querySelector('body').style.backgroundColor = '#${toHex(red)}${toHex(green)}${toHex(blue)}';
+    if (preventHeadache.checked) {
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(RenderingContext.COLOR_BUFFER_BIT | RenderingContext.DEPTH_BUFFER_BIT);
+      querySelector('body').style.backgroundColor = 'black';
+    } else {
+      var red = byteFrequencyData.getRange(0, byteFrequencyData.length ~/ 2).reduce(sum) ~/ byteFrequencyData.length;
+      var green = byteFrequencyData
+              .getRange(byteFrequencyData.length ~/ 4, 3 * byteFrequencyData.length ~/ 4)
+              .reduce(sum) ~/
+          byteFrequencyData.length;
+      var blue = byteFrequencyData.getRange(byteFrequencyData.length ~/ 2, byteFrequencyData.length).reduce(sum) ~/
+          byteFrequencyData.length;
+      gl.clearColor(red / 256, green / 256, blue / 256, 1.0);
+      gl.clear(RenderingContext.COLOR_BUFFER_BIT | RenderingContext.DEPTH_BUFFER_BIT);
+      querySelector('body').style.backgroundColor = '#${toHex(red)}${toHex(green)}${toHex(blue)}';
+    }
   }
 
   int sum(int a, int b) => a + b;
