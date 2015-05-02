@@ -85,8 +85,14 @@ class BlockRenderingSystem extends WebGlRenderingSystem {
   Float32List items;
   Uint16List indices;
   List<Attrib> attributes;
+  Uint8List byteFrequencyData;
 
-  BlockRenderingSystem(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Color])) {
+  var x = [-0.04, -0.04, 0.04, 0.04];
+  var y = [-0.02, 0.02, 0.02, -0.02];
+
+  final int indicesPerBlock = 30;
+
+  BlockRenderingSystem(RenderingContext gl, this.byteFrequencyData) : super(gl, Aspect.getAspectForAllOf([Position, Color])) {
     attributes = [new Attrib('aPosition', 2), new Attrib('aColor', 3)];
   }
 
@@ -94,33 +100,104 @@ class BlockRenderingSystem extends WebGlRenderingSystem {
   void processEntity(int index, Entity entity) {
     var p = pm[entity];
     var c = cm[entity];
+    var sizeFactor = 0.8 + byteFrequencyData.reduce(sum) ~/ byteFrequencyData.length / 50;
+    var rgbOuter = hslToRgb(c.h, c.s * sizeFactor, c.l * sizeFactor/2);
+    var rgb = hslToRgb(c.h, (c.s - 0.1) * sizeFactor, c.l);
 
-    var offset = 5 * index;
+    var offset = 5 * 4 * 2 * index;
 
-    items[offset] = p.x;
-    items[offset + 1] = p.y;
-    items[offset + 2] = c.r;
-    items[offset + 3] = c.g;
-    items[offset + 4] = c.b;
+    for (int i = 0; i < 4; i++) {
+      items[offset + i * 10] = p.x + x[i] * sizeFactor * 1.5;
+      items[offset + i * 10 + 1] = p.y + y[i] * sizeFactor * 1.5;
+      items[offset + i * 10 + 2] = rgbOuter[0];
+      items[offset + i * 10 + 3] = rgbOuter[1];
+      items[offset + i * 10 + 4] = rgbOuter[2];
 
-    indices[index] = index;
+      items[offset + i * 10 + 5] = p.x + x[i] * sizeFactor;
+      items[offset + i * 10 + 6] = p.y + y[i] * sizeFactor;
+      items[offset + i * 10 + 7] = rgb[0];
+      items[offset + i * 10 + 8] = rgb[1];
+      items[offset + i * 10 + 9] = rgb[2];
+    }
+
+    indices[indicesPerBlock * index] = 8 * index;
+    indices[indicesPerBlock * index + 1] = 8 * index + 3;
+    indices[indicesPerBlock * index + 2] = 8 * index + 1;
+    indices[indicesPerBlock * index + 3] = 8 * index;
+    indices[indicesPerBlock * index + 4] = 8 * index + 2;
+    indices[indicesPerBlock * index + 5] = 8 * index + 3;
+
+    indices[indicesPerBlock * index + 6] = 8 * index + 2;
+    indices[indicesPerBlock * index + 7] = 8 * index + 5;
+    indices[indicesPerBlock * index + 8] = 8 * index + 3;
+    indices[indicesPerBlock * index + 9] = 8 * index + 2;
+    indices[indicesPerBlock * index + 10] = 8 * index + 4;
+    indices[indicesPerBlock * index + 11] = 8 * index + 5;
+
+    indices[indicesPerBlock * index + 12] = 8 * index + 4;
+    indices[indicesPerBlock * index + 13] = 8 * index + 7;
+    indices[indicesPerBlock * index + 14] = 8 * index + 5;
+    indices[indicesPerBlock * index + 15] = 8 * index + 4;
+    indices[indicesPerBlock * index + 16] = 8 * index + 6;
+    indices[indicesPerBlock * index + 17] = 8 * index + 7;
+
+    indices[indicesPerBlock * index + 18] = 8 * index + 6;
+    indices[indicesPerBlock * index + 19] = 8 * index + 1;
+    indices[indicesPerBlock * index + 20] = 8 * index + 7;
+    indices[indicesPerBlock * index + 21] = 8 * index + 6;
+    indices[indicesPerBlock * index + 22] = 8 * index + 0;
+    indices[indicesPerBlock * index + 23] = 8 * index + 1;
+
+    indices[indicesPerBlock * index + 24] = 8 * index + 1;
+    indices[indicesPerBlock * index + 25] = 8 * index + 3;
+    indices[indicesPerBlock * index + 26] = 8 * index + 5;
+    indices[indicesPerBlock * index + 27] = 8 * index + 1;
+    indices[indicesPerBlock * index + 28] = 8 * index + 5;
+    indices[indicesPerBlock * index + 29] = 8 * index + 7;
   }
 
   @override
   void render(int length) {
     bufferElements(attributes, items, indices);
 
-    gl.drawElements(POINTS, length, UNSIGNED_SHORT, 0);
+    gl.uniform1f(gl.getUniformLocation(program, 'uSize'), byteFrequencyData.reduce(sum) ~/ byteFrequencyData.length / 10);
+
+    gl.drawElements(TRIANGLES, length * indicesPerBlock, UNSIGNED_SHORT, 0);
   }
+
+  int sum(int a, int b) => a + b;
 
   @override
   void updateLength(int length) {
-    indices = new Uint16List(length);
-    items = new Float32List(length * 5);
+    indices = new Uint16List(length * indicesPerBlock);
+    items = new Float32List(length * 5 * 4 * 2);
   }
 
   @override
   String get vShaderFile => 'BlockRenderingSystem';
   @override
   String get fShaderFile => 'BlockRenderingSystem';
+
+  List<double> hslToRgb(double h, double s, double l) {
+    double r, g, b;
+    if (s == 0.0) {
+      r = g = b = l;
+    } else {
+      num q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      num p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [r, g, b];
+  }
+
+  num hue2rgb(num p, num q, num t) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  }
 }

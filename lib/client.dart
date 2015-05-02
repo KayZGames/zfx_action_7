@@ -26,13 +26,13 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
-      new BlockSpawnerSystem(byteFrequencyData),
+      new BlockSpawnerSystem(),
       new BlockMovementSystem(),
 
       new BackgroundMusicSystem(audioContext, byteFrequencyData),
       new MusicVisualisationSystem(ctx, byteFrequencyData),
       new EqualizerSystem(ctx, byteFrequencyData),
-      new BlockRenderingSystem(ctx),
+      new BlockRenderingSystem(ctx, byteFrequencyData),
 
       new BlockDestructionSystem(),
     ];
