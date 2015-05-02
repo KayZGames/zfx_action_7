@@ -111,6 +111,10 @@ class DelayedExplosionSystem extends EntityProcessingSystem {
         var velY = (posY - p.y) * 10;
         world.createAndAddEntity(
             [new Position(posX, posY), new Velocity(velX, velY), new Color(c.h, c.s, c.l), new Particle()]);
+        if (i % 20 == 0) {
+          world.createAndAddEntity(
+              [new Position(0.92, 0.92), new Velocity(velX, velY), new Color(c.h, c.s, c.l), new Particle()]);
+        }
       }
     }
   }
@@ -127,5 +131,22 @@ class GravitySystem extends EntityProcessingSystem {
 
     v.x *= 0.99;
     v.y -= world.delta;
+  }
+}
+
+class ScoreSystem extends EntityProcessingSystem {
+  Mapper<Score> sm;
+  GameStateManager gsm;
+
+  ScoreSystem() : super(Aspect.getAspectForAllOf([Score]));
+
+  @override
+  void processEntity(Entity entity) {
+    var s = sm[entity];
+    s.delay -= world.delta;
+    if (s.delay <= 0.0) {
+      gsm.score += s.amount;
+      entity.deleteFromWorld();
+    }
   }
 }

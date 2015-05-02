@@ -282,3 +282,18 @@ class ParticleRenderingSystem extends WebGlRenderingSystem {
   @override
   String get fShaderFile => 'ParticleRenderingSystem';
 }
+
+class ScoreRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+  GameStateManager gsm;
+
+  ScoreRenderingSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    ctx..save()
+       ..fillStyle = 'grey'
+       ..fillText('Score: ${gsm.score}', 700, 10)
+       ..restore();
+  }
+}

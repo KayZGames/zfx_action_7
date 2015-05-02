@@ -32,3 +32,9 @@ class DelayedExplosion extends Component {
 }
 
 class Particle extends Component {}
+
+class Score extends Component {
+  int amount;
+  double delay;
+  Score(this.amount, this.delay);
+}

@@ -5,6 +5,7 @@ class GridManager extends Manager {
   Mapper<Color> cm;
   Mapper<DelayedExplosion> dem;
   BeatFactorSystem bfs;
+  GameStateManager gsm;
 
   var grid = <List<Entity>>[[null, null, null]];
   var cols = 1;
@@ -16,6 +17,7 @@ class GridManager extends Manager {
     moveBlock(sb.x, sb.y, entity);
     var matches = getMatches(sb.x, sb.y, c.h, new Set<int>());
     if (matches.length >= 3) {
+      world.createAndAddEntity([new Score(matches.length - 2, 0.25)]);
       matches.forEach((block) {
         sb = sbm[block];
         grid[sb.x][sb.y] = null;
@@ -59,4 +61,8 @@ class GridManager extends Manager {
 
   double get posFactor => 0.4 * (0.4 + bfs.beatFactor / 100);
   double get sizeFactor => 1.6 * (0.8 + bfs.beatFactor / 50);
+}
+
+class GameStateManager extends Manager {
+  int score = 0;
 }

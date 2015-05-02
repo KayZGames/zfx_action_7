@@ -18,8 +18,15 @@ part 'src/client/systems/sound.dart';
 class Game extends GameBase {
   AudioContext audioContext = new AudioContext();
   Uint8List byteFrequencyData = new Uint8List(1024);
+  CanvasElement hudCanvas;
+  CanvasRenderingContext2D hudCtx;
 
-  Game() : super.noAssets('zfx_action_7', 'canvas', 800, 600, webgl: true);
+  Game() : super.noAssets('zfx_action_7', 'canvas', 800, 600, webgl: true) {
+    hudCanvas = querySelector('#hud');
+    hudCtx = hudCanvas.context2D;
+    hudCtx..textBaseline = 'top'
+          ..font = '16px Verdana';
+  }
 
   void createEntities() {}
 
@@ -33,6 +40,8 @@ class Game extends GameBase {
         new GridRenderingSystem(ctx),
         new BlockRenderingSystem(ctx),
         new ParticleRenderingSystem(ctx),
+        new CanvasCleaningSystem(hudCanvas),
+        new ScoreRenderingSystem(hudCtx),
       ],
       1: [
         new BlockSpawnerSystem(),
@@ -44,12 +53,14 @@ class Game extends GameBase {
 
         new BlockDestructionSystem(),
         new DelayedExplosionSystem(),
+        new ScoreSystem(),
       ]
     };
   }
 
   onInit() {
     world.addManager(new GridManager());
+    world.addManager(new GameStateManager());
   }
 }
 
