@@ -21,20 +21,30 @@ class Game extends GameBase {
 
   Game() : super.noAssets('zfx_action_7', 'canvas', 800, 600, webgl: true);
 
-  void createEntities() {
+  void createEntities() {}
+
+  Map<int, List<EntitySystem>> getSystems() {
+    return {
+      0: [
+        new BackgroundMusicSystem(audioContext, byteFrequencyData),
+        new BeatFactorSystem(byteFrequencyData),
+        new MusicVisualisationSystem(ctx, byteFrequencyData),
+        new EqualizerSystem(ctx, byteFrequencyData),
+        new GridRenderingSystem(ctx),
+        new DefaultBlockRenderingSystem(ctx),
+        new StickyBlockRenderingSystem(ctx),
+      ],
+      1: [
+        new BlockSpawnerSystem(),
+        new BlockMovementSystem(),
+        new BlockConversionSystem(),
+        new BlockDestructionSystem(),
+        new DelayedExplosionSystem(),
+      ]
+    };
   }
 
-  List<EntitySystem> getSystems() {
-    return [
-      new BlockSpawnerSystem(),
-      new BlockMovementSystem(),
-
-      new BackgroundMusicSystem(audioContext, byteFrequencyData),
-      new MusicVisualisationSystem(ctx, byteFrequencyData),
-      new EqualizerSystem(ctx, byteFrequencyData),
-      new BlockRenderingSystem(ctx, byteFrequencyData),
-
-      new BlockDestructionSystem(),
-    ];
+  onInit() {
+    world.addManager(new GridManager());
   }
 }

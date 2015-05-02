@@ -15,3 +15,13 @@ class BlockType extends Component {
   int type;
   BlockType(this.type);
 }
+
+class StickyBlock extends Component {
+  int x, y;
+  StickyBlock(this.x, this.y);
+}
+
+class DelayedExplosion extends Component {
+  double delay;
+  DelayedExplosion(this.delay);
+}

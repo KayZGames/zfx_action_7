@@ -78,43 +78,44 @@ class EqualizerSystem extends VoidWebGlRenderingSystem {
   String get vShaderFile => 'EqualizerSystem';
 }
 
-class BlockRenderingSystem extends WebGlRenderingSystem {
+abstract class BlockRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<Color> cm;
+  BeatFactorSystem bfs;
 
   Float32List items;
   Uint16List indices;
   List<Attrib> attributes;
-  Uint8List byteFrequencyData;
 
   var x = [-0.04, -0.04, 0.04, 0.04];
   var y = [-0.02, 0.02, 0.02, -0.02];
 
   final int indicesPerBlock = 30;
 
-  BlockRenderingSystem(RenderingContext gl, this.byteFrequencyData) : super(gl, Aspect.getAspectForAllOf([Position, Color])) {
+  BlockRenderingSystem(RenderingContext gl, Aspect aspect) : super(gl, aspect) {
     attributes = [new Attrib('aPosition', 2), new Attrib('aColor', 3)];
   }
 
   @override
   void processEntity(int index, Entity entity) {
-    var p = pm[entity];
+    var px = getX(entity);
+    var py = getY(entity);
     var c = cm[entity];
-    var sizeFactor = 0.8 + byteFrequencyData.reduce(sum) ~/ byteFrequencyData.length / 50;
-    var rgbOuter = hslToRgb(c.h, c.s * sizeFactor, c.l * sizeFactor/2);
+    var sizeFactor = 0.8 + bfs.beatFactor / 50;
+    var rgbOuter = hslToRgb(c.h, c.s * sizeFactor, c.l * sizeFactor / 2);
     var rgb = hslToRgb(c.h, (c.s - 0.1) * sizeFactor, c.l);
 
     var offset = 5 * 4 * 2 * index;
 
     for (int i = 0; i < 4; i++) {
-      items[offset + i * 10] = p.x + x[i] * sizeFactor * 1.5;
-      items[offset + i * 10 + 1] = p.y + y[i] * sizeFactor * 1.5;
+      items[offset + i * 10] = px + x[i] * sizeFactor * 1.5;
+      items[offset + i * 10 + 1] = py + y[i] * sizeFactor * 1.5;
       items[offset + i * 10 + 2] = rgbOuter[0];
       items[offset + i * 10 + 3] = rgbOuter[1];
       items[offset + i * 10 + 4] = rgbOuter[2];
 
-      items[offset + i * 10 + 5] = p.x + x[i] * sizeFactor;
-      items[offset + i * 10 + 6] = p.y + y[i] * sizeFactor;
+      items[offset + i * 10 + 5] = px + x[i] * sizeFactor;
+      items[offset + i * 10 + 6] = py + y[i] * sizeFactor;
       items[offset + i * 10 + 7] = rgb[0];
       items[offset + i * 10 + 8] = rgb[1];
       items[offset + i * 10 + 9] = rgb[2];
@@ -160,12 +161,10 @@ class BlockRenderingSystem extends WebGlRenderingSystem {
   void render(int length) {
     bufferElements(attributes, items, indices);
 
-    gl.uniform1f(gl.getUniformLocation(program, 'uSize'), byteFrequencyData.reduce(sum) ~/ byteFrequencyData.length / 10);
+    gl.uniform1f(gl.getUniformLocation(program, 'uSize'), bfs.beatFactor / 10);
 
     gl.drawElements(TRIANGLES, length * indicesPerBlock, UNSIGNED_SHORT, 0);
   }
-
-  int sum(int a, int b) => a + b;
 
   @override
   void updateLength(int length) {
@@ -200,4 +199,75 @@ class BlockRenderingSystem extends WebGlRenderingSystem {
     if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
     return p;
   }
+
+  double getX(Entity e) => pm[e].x;
+  double getY(Entity e) => pm[e].y;
+}
+
+class DefaultBlockRenderingSystem extends BlockRenderingSystem {
+  DefaultBlockRenderingSystem(RenderingContext gl) : super(gl,Aspect.getAspectForAllOf([Position, Color]).exclude([StickyBlock]));
+}
+
+class StickyBlockRenderingSystem extends BlockRenderingSystem {
+  BeatFactorSystem bfs;
+  Mapper<StickyBlock> sbm;
+
+  StickyBlockRenderingSystem(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Color, StickyBlock]));
+
+  double getX(Entity e) => 0.2 * sbm[e].x;
+  double getY(Entity e) => -0.475 + sbm[e].y * -0.2 * posFactor - 0.02 * sizeFactor * (sbm[e].y+1);
+  double get posFactor => 0.4 * (0.4 + bfs.beatFactor / 100);
+  double get sizeFactor => 1.6 * (0.8 + bfs.beatFactor / 50);
+}
+
+class GridRenderingSystem extends VoidWebGlRenderingSystem {
+  GridManager gm;
+  BeatFactorSystem bfs;
+
+  Float32List items;
+  Uint16List indices;
+  List<Attrib> attributes;
+
+  var x = [-0.04, -0.04, 0.04, 0.04];
+  var y = [-0.02, 0.02, 0.02, -0.02];
+
+  GridRenderingSystem(RenderingContext gl) : super(gl) {
+    attributes = [new Attrib('aPosition', 2)];
+  }
+
+  @override
+  void render() {
+    items = new Float32List(gm.rows * gm.cols * 4 * 2 + 4);
+    indices = new Uint16List(gm.rows * gm.cols * 4 * 2 + 2);
+    var sizeFactor = 1.6 * (0.8 + bfs.beatFactor / 50);
+    var posFactor = 0.4 * (0.4 + bfs.beatFactor / 100);
+    for (int row = 0; row < gm.rows; row++) {
+      for (int col = 0; col < gm.cols; col++) {
+        var blockNumber = row * gm.cols + col;
+        var index = blockNumber * 4;
+        for (int i = 0; i < 4; i++) {
+          items[(index + i) * 2 + 0] = col * 0.2 + x[i] * sizeFactor;
+          items[(index + i) * 2 + 1] = -0.475 + row * -0.2 * posFactor + y[i] * sizeFactor - 0.02 * sizeFactor * (row+1);
+
+          indices[(index + i) * 2 + 0] = index + (i % 4);
+          indices[(index + i) * 2 + 1] = index + ((i + 1) % 4);
+        }
+      }
+    }
+    items[gm.rows * gm.cols * 8 + 0] = -1.0;
+    items[gm.rows * gm.cols * 8 + 1] = -0.45;
+    items[gm.rows * gm.cols * 8 + 2] = 1.0;
+    items[gm.rows * gm.cols * 8 + 3] = -0.45;
+
+    indices[gm.rows * gm.cols * 8 + 0] = gm.rows * gm.cols * 4;
+    indices[gm.rows * gm.cols * 8 + 1] = gm.rows * gm.cols * 4 + 1;
+    bufferElements(attributes, items, indices);
+
+    gl.drawElements(LINES, indices.length, UNSIGNED_SHORT, 0);
+  }
+
+  @override
+  String get vShaderFile => 'GridRenderingSystem';
+  @override
+  String get fShaderFile => 'GridRenderingSystem';
 }
