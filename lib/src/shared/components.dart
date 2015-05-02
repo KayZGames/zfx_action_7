@@ -5,6 +5,11 @@ class Position extends Component {
   Position(this.x, this.y);
 }
 
+class Velocity extends Component {
+  double x, y;
+  Velocity(this.x, this.y);
+}
+
 class Color extends Component {
   double h, s, l;
   Color(this.h, this.s, this.l);
@@ -25,3 +30,5 @@ class DelayedExplosion extends Component {
   double delay;
   DelayedExplosion(this.delay);
 }
+
+class Particle extends Component {}

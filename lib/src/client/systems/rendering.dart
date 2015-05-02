@@ -78,7 +78,7 @@ class EqualizerSystem extends VoidWebGlRenderingSystem {
   String get vShaderFile => 'EqualizerSystem';
 }
 
-abstract class BlockRenderingSystem extends WebGlRenderingSystem {
+class BlockRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<Color> cm;
   BeatFactorSystem bfs;
@@ -92,14 +92,13 @@ abstract class BlockRenderingSystem extends WebGlRenderingSystem {
 
   final int indicesPerBlock = 30;
 
-  BlockRenderingSystem(RenderingContext gl, Aspect aspect) : super(gl, aspect) {
+  BlockRenderingSystem(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Color, BlockType])) {
     attributes = [new Attrib('aPosition', 2), new Attrib('aColor', 3)];
   }
 
   @override
   void processEntity(int index, Entity entity) {
-    var px = getX(entity);
-    var py = getY(entity);
+    var p = pm[entity];
     var c = cm[entity];
     var sizeFactor = 0.8 + bfs.beatFactor / 50;
     var rgbOuter = hslToRgb(c.h, c.s * sizeFactor, c.l * sizeFactor / 2);
@@ -108,14 +107,14 @@ abstract class BlockRenderingSystem extends WebGlRenderingSystem {
     var offset = 5 * 4 * 2 * index;
 
     for (int i = 0; i < 4; i++) {
-      items[offset + i * 10] = px + x[i] * sizeFactor * 1.5;
-      items[offset + i * 10 + 1] = py + y[i] * sizeFactor * 1.5;
+      items[offset + i * 10] = p.x + x[i] * sizeFactor * 1.5;
+      items[offset + i * 10 + 1] = p.y + y[i] * sizeFactor * 1.5;
       items[offset + i * 10 + 2] = rgbOuter[0];
       items[offset + i * 10 + 3] = rgbOuter[1];
       items[offset + i * 10 + 4] = rgbOuter[2];
 
-      items[offset + i * 10 + 5] = px + x[i] * sizeFactor;
-      items[offset + i * 10 + 6] = py + y[i] * sizeFactor;
+      items[offset + i * 10 + 5] = p.x + x[i] * sizeFactor;
+      items[offset + i * 10 + 6] = p.y + y[i] * sizeFactor;
       items[offset + i * 10 + 7] = rgb[0];
       items[offset + i * 10 + 8] = rgb[1];
       items[offset + i * 10 + 9] = rgb[2];
@@ -177,47 +176,6 @@ abstract class BlockRenderingSystem extends WebGlRenderingSystem {
   @override
   String get fShaderFile => 'BlockRenderingSystem';
 
-  List<double> hslToRgb(double h, double s, double l) {
-    double r, g, b;
-    if (s == 0.0) {
-      r = g = b = l;
-    } else {
-      num q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      num p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-    }
-    return [r, g, b];
-  }
-
-  num hue2rgb(num p, num q, num t) {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-    return p;
-  }
-
-  double getX(Entity e) => pm[e].x;
-  double getY(Entity e) => pm[e].y;
-}
-
-class DefaultBlockRenderingSystem extends BlockRenderingSystem {
-  DefaultBlockRenderingSystem(RenderingContext gl) : super(gl,Aspect.getAspectForAllOf([Position, Color]).exclude([StickyBlock]));
-}
-
-class StickyBlockRenderingSystem extends BlockRenderingSystem {
-  BeatFactorSystem bfs;
-  Mapper<StickyBlock> sbm;
-
-  StickyBlockRenderingSystem(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Color, StickyBlock]));
-
-  double getX(Entity e) => 0.2 * sbm[e].x;
-  double getY(Entity e) => -0.475 + sbm[e].y * -0.2 * posFactor - 0.02 * sizeFactor * (sbm[e].y+1);
-  double get posFactor => 0.4 * (0.4 + bfs.beatFactor / 100);
-  double get sizeFactor => 1.6 * (0.8 + bfs.beatFactor / 50);
 }
 
 class GridRenderingSystem extends VoidWebGlRenderingSystem {
@@ -270,4 +228,50 @@ class GridRenderingSystem extends VoidWebGlRenderingSystem {
   String get vShaderFile => 'GridRenderingSystem';
   @override
   String get fShaderFile => 'GridRenderingSystem';
+}
+
+class ParticleRenderingSystem extends WebGlRenderingSystem {
+  Mapper<Position> pm;
+  Mapper<Color> cm;
+
+  Float32List items;
+  Uint16List indices;
+  List<Attrib> attributes;
+
+  ParticleRenderingSystem(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Color, Particle])) {
+    attributes = [new Attrib('aPosition', 2), new Attrib('aColor', 3)];
+  }
+
+  @override
+  void processEntity(int index, Entity entity) {
+    var p = pm[entity];
+    var c = cm[entity];
+    var rgb = hslToRgb(c.h, c.s, c.l);
+    int offset = index * 5;
+    items[offset + 0] = p.x;
+    items[offset + 1] = p.y;
+    items[offset + 2] = rgb[0];
+    items[offset + 3] = rgb[1];
+    items[offset + 4] = rgb[2];
+
+    indices[index] = index;
+  }
+
+  @override
+  void render(int length) {
+    bufferElements(attributes, items, indices);
+
+    gl.drawElements(POINTS, length, UNSIGNED_SHORT, 0);
+  }
+
+  @override
+  void updateLength(int length) {
+    items = new Float32List(length * 5);
+    indices = new Uint16List(length);
+  }
+
+  @override
+  String get vShaderFile => 'ParticleRenderingSystem';
+  @override
+  String get fShaderFile => 'ParticleRenderingSystem';
 }

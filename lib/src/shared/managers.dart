@@ -4,28 +4,25 @@ class GridManager extends Manager {
   Mapper<StickyBlock> sbm;
   Mapper<Color> cm;
   Mapper<DelayedExplosion> dem;
+  BeatFactorSystem bfs;
 
   var grid = <List<Entity>>[[null, null, null]];
   var cols = 1;
   var rows = 3;
 
-  @override
-  void changed(Entity entity) {
-    if (sbm.has(entity) && !dem.has(entity)) {
-      var sb = sbm[entity];
-      var c = cm[entity];
-      moveBlock(sb.x, sb.y, entity);
-      var matches = getMatches(sb.x, sb.y, c.h, new Set<int>());
-      if (matches.length >= 3) {
-        matches.forEach((block) {
-          sb = sbm[block];
-          grid[sb.x][sb.y] = null;
-          block
-            ..addComponent(new DelayedExplosion(0.2))
-            ..changedInWorld();
-        });
-        world.processEntityChanges();
-      }
+  void addStickyBlock(Entity entity) {
+    var sb = sbm[entity];
+    var c = cm[entity];
+    moveBlock(sb.x, sb.y, entity);
+    var matches = getMatches(sb.x, sb.y, c.h, new Set<int>());
+    if (matches.length >= 3) {
+      matches.forEach((block) {
+        sb = sbm[block];
+        grid[sb.x][sb.y] = null;
+        block
+          ..addComponent(new DelayedExplosion(0.2))
+          ..changedInWorld();
+      });
     }
   }
 
@@ -34,13 +31,14 @@ class GridManager extends Manager {
       var oldBlock = grid[x][y];
       if (y + 1 < rows) {
         moveBlock(x, y + 1, oldBlock);
-        var sb = sbm[oldBlock];
-        sb.y += 1;
       } else {
         oldBlock.deleteFromWorld();
       }
     }
     grid[x][y] = block;
+    var sb = sbm[block];
+    sb.y = y;
+    sb.x = x;
   }
 
   List<Entity> getMatches(int x, int y, double hue, Set<int> checked) {
@@ -58,4 +56,7 @@ class GridManager extends Manager {
     }
     return [];
   }
+
+  double get posFactor => 0.4 * (0.4 + bfs.beatFactor / 100);
+  double get sizeFactor => 1.6 * (0.8 + bfs.beatFactor / 50);
 }
