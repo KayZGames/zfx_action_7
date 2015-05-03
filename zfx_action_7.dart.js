@@ -2615,7 +2615,7 @@ v=J.R(w)
 if(v.gd4(w)!==!0)x.connect(y.destination,0,0)
 x.connect(z.z,0,0)
 x.loop=!0
-C.PV.wE(x)
+C.PV.xk(x,0)
 y=v.gi9(w)
 H.J(new W.Ov(0,y.Q,y.a,W.V(new F.YO(z,x)),y.b),[H.Kp(y,0)]).DN()}},
 YO:{
@@ -2623,8 +2623,8 @@ YO:{
 $1:function(a){var z,y
 z=this.Q
 y=this.a
-if(J.K0(z.dx)===!0){y.MC(0,0)
-y.cU(0,z.z)}else y.cU(0,z.y.destination)}},
+if(J.K0(z.dx)===!0){y.disconnect(0)
+y.connect(z.z,0,0)}else y.connect(z.y.destination,0,0)}},
 kC:{
 "^":"HK;y,z,ch,cx,cy,Q,a,b,c,d,e,f,r,x",
 eQ:function(){var z,y,x,w
@@ -2646,7 +2646,7 @@ w=this.cy
 v=J.R(w)
 if(v.gd4(w)!==!0)x.connect(y.destination,0,0)
 x.connect(this.z.gLF(),0,0)
-C.PV.wE(x)
+C.PV.xk(x,0)
 x.loop=!1
 y=v.gi9(w)
 H.J(new W.Ov(0,y.Q,y.a,W.V(new F.rJ(this,x)),y.b),[H.Kp(y,0)]).DN()}a.mN()}},
@@ -2662,8 +2662,8 @@ rJ:{
 $1:function(a){var z,y
 z=this.Q
 y=this.a
-if(J.K0(z.cy)===!0){y.MC(0,0)
-y.cU(0,z.z.gLF())}else y.cU(0,z.ch.destination)}}}],["","",,H,{
+if(J.K0(z.cy)===!0){y.disconnect(0)
+y.connect(z.z.gLF(),0,0)}else y.connect(z.ch.destination,0,0)}}}],["","",,H,{
 "^":"",
 Wp:function(){return new P.lj("No element")},
 ar:function(){return new P.lj("Too few elements")},
@@ -5144,6 +5144,9 @@ $isa:1,
 "%":"AudioBuffer"},
 j4:{
 "^":"XN;",
+vY:function(a,b,c,d){if(!!a.start)a.start(b)
+else a.noteOn(b)},
+xk:function(a,b){return this.vY(a,b,null,null)},
 "%":"AudioBufferSourceNode"},
 WK:{
 "^":"D0;",
