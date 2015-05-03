@@ -75,6 +75,7 @@ class GridManager extends Manager {
       }
       column[row+1] = null;
     }
+    column.where((block) => null != block).forEach((block) => matchIt(sbm[block], cm[block]));
   }
 
   void addColumn() {
