@@ -63,6 +63,7 @@ class BlockDestructionSystem extends EntityProcessingSystem {
 
 class BeatFactorSystem extends VoidEntitySystem {
   double beatFactor = 1.0;
+  double maxBeat = 5.0;
   List<int> byteFrequencyData;
 
   BeatFactorSystem(this.byteFrequencyData);
@@ -70,6 +71,8 @@ class BeatFactorSystem extends VoidEntitySystem {
   @override
   void processSystem() {
     beatFactor = byteFrequencyData.reduce(sum) / byteFrequencyData.length;
+    maxBeat = max(maxBeat, beatFactor);
+    beatFactor = 1.0 + 50 * beatFactor / maxBeat;
   }
 
   int sum(int a, int b) => a + b;
