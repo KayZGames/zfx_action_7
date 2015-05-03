@@ -16,6 +16,10 @@ class GridManager extends Manager {
     var sb = sbm[entity];
     var c = cm[entity];
     moveBlockTo(sb.col, sb.row, entity);
+    matchIt(sb, c);
+  }
+
+  void matchIt(StickyBlock sb, Color c) {
     var matches = getMatches(sb.col, sb.row, c.h, new Set<int>());
     if (matches.length >= 3) {
       world.createAndAddEntity([new Score(matches.length - 2, 0.25)]);
@@ -37,6 +41,7 @@ class GridManager extends Manager {
     if (oldBlock != null) {
       if (y + 1 < rows) {
         moveBlockTo(x, y + 1, oldBlock);
+        matchIt(sbm[oldBlock], cm[oldBlock]);
       } else {
         oldBlock.deleteFromWorld();
       }
