@@ -17,7 +17,7 @@ part 'src/client/systems/sound.dart';
 
 class Game extends GameBase {
   AudioContext audioContext = new AudioContext();
-  Uint8List byteFrequencyData = new Uint8List(256);
+  Uint8List byteFrequencyData = new Uint8List(512);
   CanvasElement hudCanvas;
   CanvasRenderingContext2D hudCtx;
 
