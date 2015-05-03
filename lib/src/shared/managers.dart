@@ -125,6 +125,7 @@ class GameStateManager extends Manager {
   bool gameOver = false;
   GridManager gm;
   BlockSpawnerSystem bss;
+  BlockMovementSystem bms;
 
   void blockOut() {
     lives--;
@@ -141,6 +142,7 @@ class GameStateManager extends Manager {
     world.deleteAllEntities();
     gm.reset();
     bss.reset();
+    bms.reset();
     world.createAndAddEntity([new Controller()]);
   }
 }

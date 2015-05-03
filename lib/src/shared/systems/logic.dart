@@ -19,16 +19,23 @@ class MovementSystem extends EntityProcessingSystem {
 class BlockMovementSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
   GameStateManager gsm;
+  double blockSpeed = 0.2;
+  double accelerate = 1.0;
 
   BlockMovementSystem() : super(Aspect.getAspectForAllOf([Position, BlockType]).exclude([StickyBlock]));
 
   @override
   void processEntity(Entity entity) {
-    pm[entity].y -= 0.5 * world.delta;
+    pm[entity].y -= blockSpeed * world.delta * accelerate;
   }
 
   @override
   bool checkProcessing() => !gsm.gameOver;
+
+  void reset() {
+    blockSpeed = 0.2;
+    accelerate = 1.0;
+  }
 }
 
 class BlockConversionSystem extends EntityProcessingSystem {
@@ -169,6 +176,7 @@ class ScoreSystem extends EntityProcessingSystem {
   GameStateManager gsm;
   GridManager gm;
   BlockSpawnerSystem bss;
+  BlockMovementSystem bms;
 
   ScoreSystem() : super(Aspect.getAspectForAllOf([Score]));
 
@@ -178,15 +186,17 @@ class ScoreSystem extends EntityProcessingSystem {
     s.delay -= world.delta;
     if (s.delay <= 0.0) {
       gsm.score += s.amount;
+      bms.blockSpeed *= 1.01;
+      bss.timeForNext *= 0.98;
       entity.deleteFromWorld();
 
-      if ((1.2 * gsm.score) >= bss.colors.length) {
+      if (1 + log(2.5 * gsm.score) >= bss.colors.length) {
         bss.addColor();
       }
       if (1 + log(1.5 * gsm.score) >= gm.cols) {
         gm.addColumn();
       }
-      if (3 + log(1.2 * gsm.score) >= gm.rows) {
+      if (2 + log(gsm.score) >= gm.rows) {
         gm.addRow();
       }
       if (gsm.score % 10 == 0) {
@@ -201,9 +211,10 @@ class BlockSpawnerSystem extends VoidEntitySystem {
   GameStateManager gsm;
 
   var spawnTimer = 1.0;
-  var timeForNext = 1.0;
+  var timeForNext = 3.0;
   List<double> colorPool = new List<double>();
   List<double> colors = [random.nextDouble()];
+  double accelerate = 1.0;
 
   @override
   void initialize() {
@@ -220,7 +231,7 @@ class BlockSpawnerSystem extends VoidEntitySystem {
 
   @override
   void processSystem() {
-    spawnTimer -= world.delta;
+    spawnTimer -= world.delta * accelerate;
     if (spawnTimer <= 0.0) {
       spawnTimer += timeForNext;
       world.createAndAddEntity([
@@ -243,8 +254,9 @@ class BlockSpawnerSystem extends VoidEntitySystem {
 
   void reset() {
     spawnTimer = 1.0;
-    timeForNext = 1.0;
+    timeForNext = 3.0;
     colors = [random.nextDouble()];
+    accelerate = 1.0;
     initColorPool();
   }
 }

@@ -3,6 +3,8 @@ part of client;
 class InputHandlingSystem extends GenericInputHandlingSystem {
   Mapper<Controller> cm;
   GameStateManager gsm;
+  BlockMovementSystem bms;
+  BlockSpawnerSystem bss;
 
   InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller]));
 
@@ -29,6 +31,13 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
       c.direction = 1;
     } else {
       c.direction = 0;
+    }
+    if (down) {
+      bms.accelerate = 7.5;
+      bss.accelerate = 7.5;
+    } else {
+      bms.accelerate = 1.0;
+      bss.accelerate = 1.0;
     }
   }
 }
