@@ -50,20 +50,20 @@ class EqualizerSystem extends VoidWebGlRenderingSystem {
   void render() {
     for (int i = 0; i < byteFrequencyData.length; i++) {
       var index = i * 3 * 4;
-      items[index] = -1.0 + i * width;
-      items[index + 1] = -byteFrequencyData[i] * height;
+      items[index + 0] = -byteFrequencyData[i] * height;
+      items[index + 1] = 1.0 - i * width;
       items[index + 2] = byteFrequencyData[i].toDouble();
 
-      items[index + 3] = -1.0 + i * width + width;
-      items[index + 4] = -byteFrequencyData[i] * height;
+      items[index + 3] = -byteFrequencyData[i] * height;
+      items[index + 4] = 1.0 - i * width - width;
       items[index + 5] = byteFrequencyData[i].toDouble();
 
-      items[index + 6] = -1.0 + i * width + width;
-      items[index + 7] = byteFrequencyData[i] * height;
+      items[index + 6] = byteFrequencyData[i] * height;
+      items[index + 7] = 1.0 - i * width - width;
       items[index + 8] = byteFrequencyData[i].toDouble();
 
-      items[index + 9] = -1.0 + i * width;
-      items[index + 10] = byteFrequencyData[i] * height;
+      items[index + 9] = byteFrequencyData[i] * height;
+      items[index + 10] = 1.0 - i * width;
       items[index + 11] = byteFrequencyData[i].toDouble();
 
       indices[i * 6] = index;
