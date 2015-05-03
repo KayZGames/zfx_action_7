@@ -16,7 +16,8 @@ class BackgroundMusicSystem extends VoidEntitySystem {
     analyser = audioContext.createAnalyser();
     analyser.fftSize = byteFrequencyData.length * 2;
     var sounds = <Future<HttpRequest>>[];
-    sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg', responseType: 'arraybuffer'));
+    sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg',
+        responseType: 'arraybuffer'));
 //    sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/misanthropy.ogg', responseType: 'arraybuffer'));
 //    sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/26903__vexst__snare-4.ogg', responseType: 'arraybuffer'));
 //    sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/26880__vexst__closed-hi-hat-2.ogg', responseType: 'arraybuffer'));
@@ -33,7 +34,7 @@ class BackgroundMusicSystem extends VoidEntitySystem {
         }
         source.connectNode(analyser);
         source.loop = true;
-        source.start(time);
+        source.start();
         mute.onChange.listen((data) {
           if (mute.checked) {
             source.disconnect(0);
@@ -49,5 +50,55 @@ class BackgroundMusicSystem extends VoidEntitySystem {
   @override
   void processSystem() {
     analyser.getByteFrequencyData(byteFrequencyData);
+  }
+}
+
+class SoundSystem extends EntityProcessingSystem {
+  Mapper<SoundEffect> sm;
+  BackgroundMusicSystem bms;
+
+  AudioContext audioContext;
+  Map<String, List<AudioBuffer>> sounds = {'explode': []};
+  InputElement mute = querySelector('#mute');
+
+  SoundSystem(this.audioContext) : super(Aspect.getAspectForAllOf([SoundEffect]));
+
+  @override
+  void initialize() {
+    for (int i = 0; i < 3; i++) {
+      HttpRequest
+          .request('packages/zfx_action_7/assets/sfx/179265__jorickhoofd__exploding-lightbulb-1-$i.ogg',
+              responseType: 'arraybuffer')
+          .then((request) {
+        audioContext.decodeAudioData(request.response).then((buffer) {
+          sounds['explode'].add(buffer);
+        });
+      });
+    }
+  }
+
+  @override
+  void processEntity(Entity entity) {
+    var s = sm[entity];
+    var buffers = sounds[s.name];
+    if (buffers.isNotEmpty) {
+      var source = audioContext.createBufferSource();
+      source.buffer = buffers[random.nextInt(buffers.length)];
+      if (!mute.checked) {
+        source.connectNode(audioContext.destination);
+      }
+      source.connectNode(bms.analyser);
+      source.start();
+      source.loop = false;
+      mute.onChange.listen((data) {
+        if (mute.checked) {
+          source.disconnect(0);
+          source.connectNode(bms.analyser);
+        } else {
+          source.connectNode(audioContext.destination);
+        }
+      });
+    }
+    entity.deleteFromWorld();
   }
 }

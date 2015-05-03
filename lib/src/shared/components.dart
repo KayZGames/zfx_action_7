@@ -47,3 +47,8 @@ class Score extends Component {
 class Controller extends Component {
   int direction = 0;
 }
+
+class SoundEffect extends Component {
+  String name;
+  SoundEffect(this.name);
+}

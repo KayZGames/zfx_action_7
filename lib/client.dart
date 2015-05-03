@@ -7,7 +7,7 @@ import 'dart:web_gl';
 
 import 'package:zfx_action_7/shared.dart';
 
-import 'package:gamedev_helpers/gamedev_helpers.dart';
+import 'package:gamedev_helpers/gamedev_helpers.dart' hide SoundSystem;
 export 'package:gamedev_helpers/gamedev_helpers.dart';
 
 //part 'src/client/systems/name.dart';
@@ -46,6 +46,7 @@ class Game extends GameBase {
         new ScoreRenderingSystem(hudCtx),
       ],
       1: [
+        new SoundSystem(audioContext),
         new InputHandlingSystem(),
         new ControllerSystem(),
 

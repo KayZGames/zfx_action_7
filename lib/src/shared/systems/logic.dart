@@ -128,6 +128,7 @@ class DelayedExplosionSystem extends EntityProcessingSystem {
       var p = pm[entity];
       var c = cm[entity];
       gm.removeExplodingBlock(entity);
+      world.createAndAddEntity([new SoundEffect('explode')]);
       entity.deleteFromWorld();
       for (int i = 0; i < 250; i++) {
         var posX = p.x + 0.04 * gm.sizeFactor * (-1 + 2 * random.nextDouble());
