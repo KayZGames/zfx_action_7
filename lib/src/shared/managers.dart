@@ -25,7 +25,6 @@ class GridManager extends Manager {
       world.createAndAddEntity([new Score(matches.length - 2, 0.25)]);
       matches.forEach((block) {
         sb = sbm[block];
-        grid[sb.col][sb.row] = null;
         block
           ..addComponent(new DelayedExplosion(0.2))
           ..changedInWorld();
@@ -49,15 +48,33 @@ class GridManager extends Manager {
   }
 
   void moveAllBlocks(int direction) {
+    List<Entity> columnToMove;
     if (direction == -1) {
-      grid.add(grid.removeAt(0));
+      columnToMove = grid.removeAt(0);
+      grid.add(columnToMove);
     } else {
-      grid.insert(0, grid.removeLast());
+      columnToMove = grid.removeLast();
+      grid.insert(0, columnToMove);
     }
     grid.forEach((column) => column.where((block) => null != block).forEach((block) {
       var sb = sbm[block];
       sb.col = (sb.col + direction) % cols;
     }));
+    columnToMove.where((block) => null != block).forEach((block) => matchIt(sbm[block], cm[block]));
+  }
+
+  void removeExplodingBlock(Entity block) {
+    var sb = sbm[block];
+    var column = grid[sb.col];
+    column[sb.row] = null;
+    for (int row = sb.row; row < rows-1; row++) {
+      var blockToMove = column[row+1];
+      column[row] = blockToMove;
+      if (null != blockToMove) {
+        sbm[blockToMove].row = row;
+      }
+      column[row+1] = null;
+    }
   }
 
   void addColumn() {
@@ -76,7 +93,7 @@ class GridManager extends Manager {
   List<Entity> getMatches(int x, int y, double hue, Set<int> checked) {
     if (x >= 0 && x < cols && y >= 0 && y < rows) {
       var block = grid[x][y];
-      if (null != block && !checked.contains(block.id) && cm[block].h == hue) {
+      if (null != block && !checked.contains(block.id) && cm[block].h == hue && !dem.has(block)) {
         checked.add(block.id);
         var result = [block];
         result.addAll(getMatches(x + 1, y, hue, checked));

@@ -127,9 +127,7 @@ class DelayedExplosionSystem extends EntityProcessingSystem {
     if (de.delay <= 0.0) {
       var p = pm[entity];
       var c = cm[entity];
-      if (fbm.has(entity)) {
-        print('nooooooooooooooooooo');
-      }
+      gm.removeExplodingBlock(entity);
       entity.deleteFromWorld();
       for (int i = 0; i < 250; i++) {
         var posX = p.x + 0.04 * gm.sizeFactor * (-1 + 2 * random.nextDouble());
