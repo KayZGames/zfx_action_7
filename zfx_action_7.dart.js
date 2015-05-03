@@ -1997,10 +1997,10 @@ x=Array(16)
 x.fixed$length=Array
 x=new F.nt(y,null,null,null,null,null,v,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(t,!1,x,0),0,0,0,null,null,null)
 x.l7(new S.Yl(0,0,0))
-x.ch=new Float32Array(H.T(3072))
-x.cx=new Uint16Array(H.T(1536))
+x.ch=new Float32Array(H.T(6144))
+x.cx=new Uint16Array(H.T(3072))
 x.cy=[new L.IQ("aPosition",2),new L.IQ("aValue",1)]
-x.db=0.0078125
+x.db=0.00390625
 x.dx=0.0033333333333333335
 t=D.bL(16,!1)
 y=Array(16)
@@ -2168,9 +2168,9 @@ if(J.K0(this.ch)===!0){J.Np(z,0,0,0,1)
 z.clear(16640)
 z=document.querySelector("body").style
 z.backgroundColor="black"}else{y=this.y
-x=J.xH(C.Jm.Mu(y,0,128).qx(0,this.gaQ()),256)
-w=J.xH(C.Jm.Mu(y,64,192).qx(0,this.gaQ()),256)
-v=J.xH(C.Jm.Mu(y,128,256).qx(0,this.gaQ()),256)
+x=J.xH(C.Jm.Mu(y,0,256).qx(0,this.gaQ()),512)
+w=J.xH(C.Jm.Mu(y,128,384).qx(0,this.gaQ()),512)
+v=J.xH(C.Jm.Mu(y,256,512).qx(0,this.gaQ()),512)
 if(typeof x!=="number")return x.S()
 if(typeof w!=="number")return w.S()
 if(typeof v!=="number")return v.S()
@@ -2183,7 +2183,7 @@ hY:[function(a,b){return J.WB(a,b)},"$2","gaQ",4,0,5]},
 nt:{
 "^":"HV;z,ch,cx,cy,db,dx,y,Q$,a$,b$,c$,d$,e$,f$,Q,a,b,c,d,e,f,r,x",
 Ww:function(){var z,y,x,w,v,u,t,s,r,q,p,o,n,m
-for(z=this.ch,y=this.z,x=this.dx,w=z.length,v=this.db,u=this.cx,t=u.length,s=0;s<256;++s){r=s*3*4
+for(z=this.ch,y=this.z,x=this.dx,w=z.length,v=this.db,u=this.cx,t=u.length,s=0;s<512;++s){r=s*3*4
 q=y[s]
 if(r>=w)return H.e(z,r)
 z[r]=-q*x
@@ -2247,7 +2247,7 @@ u[o]=m
 n+=5
 if(n>=t)return H.e(u,n)
 u[n]=q}this.c0(this.cy,z,u)
-J.Hb(this.y,4,512,5123,0)},
+J.Hb(this.y,4,1024,5123,0)},
 gy5:function(){return"EqualizerSystem"},
 gR0:function(){return"EqualizerSystem"}},
 wx:{
@@ -2656,7 +2656,7 @@ this.z=this.a.y.p(0,C.SZ)
 z=this.ch
 y=z.createAnalyser()
 this.cx=y
-y.fftSize=512
+y.fftSize=1024
 x=H.J([],[[P.b8,W.zU]])
 x.push(W.lt("packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg",null,null,null,null,"arraybuffer",null,null))
 this.fy=z.createBufferSource()
@@ -6773,7 +6773,7 @@ this.y=z}},
 nA:{
 "^":"GN;qt:y<,C0:z?,ch,Q,a,b,c,d,e,f,r,x",
 ce:function(){var z,y
-z=J.x4(C.Jm.qx(this.ch,this.gaQ()),256)
+z=J.x4(C.Jm.qx(this.ch,this.gaQ()),512)
 this.y=z
 z=P.u(this.z,z)
 this.z=z
@@ -7148,7 +7148,7 @@ gy:function(a){return this.Q[1]}}}],["","",,Q,{
 "^":"",
 Q:[function(){var z,y,x,w,v,u
 z=new (window.AudioContext||window.webkitAudioContext)()
-y=new Uint8Array(H.T(256))
+y=new Uint8Array(H.T(512))
 x=document.querySelector("canvas")
 w=H.U(document.querySelector("canvas"),"$isN")
 w.toString
