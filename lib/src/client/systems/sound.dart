@@ -34,7 +34,7 @@ class BackgroundMusicSystem extends VoidEntitySystem {
         }
         source.connectNode(analyser);
         source.loop = true;
-        source.start();
+        source.start(0);
         mute.onChange.listen((data) {
           if (mute.checked) {
             source.disconnect(0);
@@ -88,7 +88,7 @@ class SoundSystem extends EntityProcessingSystem {
         source.connectNode(audioContext.destination);
       }
       source.connectNode(bms.analyser);
-      source.start();
+      source.start(0);
       source.loop = false;
       mute.onChange.listen((data) {
         if (mute.checked) {
