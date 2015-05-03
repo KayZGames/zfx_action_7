@@ -28,7 +28,9 @@ class Game extends GameBase {
           ..font = '16px Verdana';
   }
 
-  void createEntities() {}
+  void createEntities() {
+    addEntity([new Controller()]);
+  }
 
   Map<int, List<EntitySystem>> getSystems() {
     return {
@@ -44,9 +46,13 @@ class Game extends GameBase {
         new ScoreRenderingSystem(hudCtx),
       ],
       1: [
+        new InputHandlingSystem(),
+        new ControllerSystem(),
+
         new BlockSpawnerSystem(),
         new MovementSystem(),
         new BlockMovementSystem(),
+        new FallingBlockPositionUpdatingSystem(),
         new BlockConversionSystem(),
         new StickyBlockPositionUpdatingSystem(),
         new GravitySystem(),

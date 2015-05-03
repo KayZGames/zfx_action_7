@@ -22,8 +22,13 @@ class BlockType extends Component {
 }
 
 class StickyBlock extends Component {
-  int x, y;
-  StickyBlock(this.x, this.y);
+  int col, row;
+  StickyBlock(this.col, this.row);
+}
+
+class FallingBlock extends Component {
+  int col;
+  FallingBlock(this.col);
 }
 
 class DelayedExplosion extends Component {
@@ -37,4 +42,8 @@ class Score extends Component {
   int amount;
   double delay;
   Score(this.amount, this.delay);
+}
+
+class Controller extends Component {
+  int direction = 0;
 }

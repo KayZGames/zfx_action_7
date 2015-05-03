@@ -1,19 +1,23 @@
 part of client;
 
-class BlockSpawnerSystem extends VoidEntitySystem {
-  var spawnTimer = 1.0;
-  var colors = [random.nextDouble()];
+class InputHandlingSystem extends GenericInputHandlingSystem {
+  Mapper<Controller> cm;
+
+  InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller]));
 
   @override
-  void processSystem() {
-    spawnTimer -= world.delta;
-    if (spawnTimer <= 0.0) {
-      spawnTimer += 0.5;
-      world.createAndAddEntity([
-        new Position(0.0, 1.0),
-        new Color(colors[random.nextInt(colors.length)], 0.8, 0.8),
-        new BlockType(BlockType.RECTANGLE)
-      ]);
+  void processEntity(Entity entity) {
+    var c = cm[entity];
+    if (left) {
+      unpress[KeyCode.LEFT] = true;
+      unpress[KeyCode.A] = true;
+      c.direction = -1;
+    } else if (right) {
+      unpress[KeyCode.RIGHT] = true;
+      unpress[KeyCode.D] = true;
+      c.direction = 1;
+    } else {
+      c.direction = 0;
     }
   }
 }

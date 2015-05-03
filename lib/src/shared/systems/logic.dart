@@ -29,15 +29,19 @@ class BlockMovementSystem extends EntityProcessingSystem {
 
 class BlockConversionSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
+  Mapper<FallingBlock> fbm;
   GridManager gm;
 
-  BlockConversionSystem() : super(Aspect.getAspectForAllOf([Position, BlockType]).exclude([StickyBlock]));
+  BlockConversionSystem() : super(Aspect.getAspectForAllOf([Position, FallingBlock]));
 
   @override
   void processEntity(Entity entity) {
     if (pm[entity].y < -0.5) {
-      entity.addComponent(new StickyBlock(0, 0));
-      entity.changedInWorld();
+      var fb = fbm[entity];
+      entity
+        ..addComponent(new StickyBlock(fb.col, 0))
+        ..removeComponent(FallingBlock)
+        ..changedInWorld();
       gm.addStickyBlock(entity);
     }
   }
@@ -45,8 +49,9 @@ class BlockConversionSystem extends EntityProcessingSystem {
 
 class BlockDestructionSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
+  Mapper<FallingBlock> fbm;
 
-  BlockDestructionSystem() : super(Aspect.getAspectForAllOf([Position]));
+  BlockDestructionSystem() : super(Aspect.getAspectForAllOf([Position]).exclude([StickyBlock]));
 
   @override
   void processEntity(Entity entity) {
@@ -73,7 +78,6 @@ class BeatFactorSystem extends VoidEntitySystem {
 class StickyBlockPositionUpdatingSystem extends EntityProcessingSystem {
   Mapper<StickyBlock> sbm;
   Mapper<Position> pm;
-  BeatFactorSystem bfs;
   GridManager gm;
 
   StickyBlockPositionUpdatingSystem() : super(Aspect.getAspectForAllOf([Position, StickyBlock]));
@@ -83,13 +87,30 @@ class StickyBlockPositionUpdatingSystem extends EntityProcessingSystem {
     var p = pm[entity];
     var sb = sbm[entity];
 
-    p.x = p.x * 0.8 + 0.2 * sb.x * 0.2;
-    p.y = p.y * 0.8 + (-0.475 + sb.y * -0.2 * gm.posFactor - 0.02 * gm.sizeFactor * (sb.y + 1)) * 0.2;
+    p.x = p.x * 0.8 + gm.getColPos(sb.col) * 0.2;
+    p.y = p.y * 0.8 + (-0.475 + sb.row * -0.2 * gm.posFactor - 0.02 * gm.sizeFactor * (sb.row + 1)) * 0.2;
+  }
+}
+
+class FallingBlockPositionUpdatingSystem extends EntityProcessingSystem {
+  Mapper<FallingBlock> fbm;
+  Mapper<Position> pm;
+  GridManager gm;
+
+  FallingBlockPositionUpdatingSystem() : super(Aspect.getAspectForAllOf([Position, FallingBlock]));
+
+  @override
+  void processEntity(Entity entity) {
+    var p = pm[entity];
+    var fb = fbm[entity];
+
+    p.x = p.x * 0.8 + gm.getColPos(fb.col) * 0.2;
   }
 }
 
 class DelayedExplosionSystem extends EntityProcessingSystem {
   Mapper<DelayedExplosion> dem;
+  Mapper<FallingBlock> fbm;
   Mapper<Position> pm;
   Mapper<Color> cm;
   GridManager gm;
@@ -103,6 +124,9 @@ class DelayedExplosionSystem extends EntityProcessingSystem {
     if (de.delay <= 0.0) {
       var p = pm[entity];
       var c = cm[entity];
+      if (fbm.has(entity)) {
+        print('nooooooooooooooooooo');
+      }
       entity.deleteFromWorld();
       for (int i = 0; i < 250; i++) {
         var posX = p.x + 0.04 * gm.sizeFactor * (-1 + 2 * random.nextDouble());
@@ -137,6 +161,8 @@ class GravitySystem extends EntityProcessingSystem {
 class ScoreSystem extends EntityProcessingSystem {
   Mapper<Score> sm;
   GameStateManager gsm;
+  GridManager gm;
+  BlockSpawnerSystem bss;
 
   ScoreSystem() : super(Aspect.getAspectForAllOf([Score]));
 
@@ -147,6 +173,69 @@ class ScoreSystem extends EntityProcessingSystem {
     if (s.delay <= 0.0) {
       gsm.score += s.amount;
       entity.deleteFromWorld();
+
+      if ((2 * gsm.score) >= bss.colors.length) {
+        bss.addColor();
+      }
+      if (3 + log(1.5 * gsm.score) >= gm.cols) {
+        gm.addColumn();
+      }
+      if (1 + log(gsm.score) >= gm.rows) {
+        gm.addRow();
+      }
+    }
+  }
+}
+
+class BlockSpawnerSystem extends VoidEntitySystem {
+  GridManager gm;
+
+  var spawnTimer = 1.0;
+  var timeForNext = 1.0;
+  List<double> colors = [random.nextDouble()];
+
+  @override
+  void processSystem() {
+    spawnTimer -= world.delta;
+    if (spawnTimer <= 0.0) {
+      spawnTimer += timeForNext;
+      world.createAndAddEntity([
+        new Position(0.0, 1.1),
+        new FallingBlock(random.nextInt(gm.cols)),
+        new Color(colors[random.nextInt(colors.length)], 0.8, 0.8),
+        new BlockType(BlockType.RECTANGLE)
+      ]);
+    }
+  }
+
+  void addColor() {
+    double nextColor;
+    double currentDist = 0.0;
+    var counter = 0;
+    do {
+      nextColor = random.nextDouble();
+      currentDist = colors.fold(1.0, (minDist, color) {
+        var distance = (0.5 - (color - nextColor - 0.5).abs()).abs();
+        return min(minDist, distance);
+      });
+      counter++;
+    } while (currentDist < 0.05 && counter < 10);
+    colors.add(nextColor);
+  }
+}
+
+
+class ControllerSystem extends EntityProcessingSystem {
+  Mapper<Controller> cm;
+  GridManager gm;
+
+  ControllerSystem() : super(Aspect.getAspectForAllOf([Controller]));
+
+  @override
+  void processEntity(Entity entity) {
+    var c = cm[entity];
+    if (c.direction != 0) {
+      gm.moveAllBlocks(c.direction);
     }
   }
 }

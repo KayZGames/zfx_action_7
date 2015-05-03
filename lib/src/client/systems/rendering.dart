@@ -211,7 +211,7 @@ class GridRenderingSystem extends VoidWebGlRenderingSystem {
         var blockNumber = row * gm.cols + col;
         var index = blockNumber * 4;
         for (int i = 0; i < 4; i++) {
-          items[(index + i) * 2 + 0] = col * 0.2 + x[i] * sizeFactor;
+          items[(index + i) * 2 + 0] = gm.getColPos(col) + x[i] * sizeFactor;
           items[(index + i) * 2 + 1] = -0.475 + row * -0.2 * posFactor + y[i] * sizeFactor - 0.02 * sizeFactor * (row+1);
 
           indices[(index + i) * 2 + 0] = index + (i % 4);
