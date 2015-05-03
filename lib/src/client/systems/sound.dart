@@ -2,6 +2,8 @@ part of client;
 
 class BackgroundMusicSystem extends VoidEntitySystem {
   BeatFactorSystem bfs;
+  GameStateManager gsm;
+
   AudioContext audioContext;
   AnalyserNode analyser;
   AudioBuffer kick;
@@ -10,6 +12,8 @@ class BackgroundMusicSystem extends VoidEntitySystem {
   Uint8List byteFrequencyData;
   InputElement mute = querySelector('#mute');
   InputElement musicFile = querySelector('#music');
+  AudioBufferSourceNode source;
+  bool disconnected = false;
 
   BackgroundMusicSystem(this.audioContext, this.byteFrequencyData);
 
@@ -20,7 +24,7 @@ class BackgroundMusicSystem extends VoidEntitySystem {
     var sounds = <Future<HttpRequest>>[];
     sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg',
         responseType: 'arraybuffer'));
-    var source = audioContext.createBufferSource();
+    source = audioContext.createBufferSource();
     Future.wait(sounds).then((requests) {
       var audioBuffers = <Future<AudioBuffer>>[];
       requests.forEach((request) {
@@ -76,6 +80,19 @@ class BackgroundMusicSystem extends VoidEntitySystem {
   @override
   void processSystem() {
     analyser.getByteFrequencyData(byteFrequencyData);
+    if (gsm.gameOver && !disconnected) {
+      var gain = audioContext.createGain()..gain.linearRampToValueAtTime(0.0001, audioContext.currentTime + 2.0);
+      gain.connectNode(audioContext.destination);
+      gain.connectNode(analyser);
+      source.disconnect(0);
+      source.connectNode(gain);
+      disconnected = true;
+    } else if (!gsm.gameOver && disconnected) {
+      source.disconnect(0);
+      source.connectNode(analyser);
+      source.connectNode(audioContext.destination);
+      disconnected = false;
+    }
   }
 }
 
@@ -84,20 +101,25 @@ class SoundSystem extends EntityProcessingSystem {
   BackgroundMusicSystem bms;
 
   AudioContext audioContext;
-  Map<String, List<AudioBuffer>> sounds = {'explode': []};
+  Map<String, List<AudioBuffer>> sounds = {'explode': [], 'gameover': []};
   InputElement mute = querySelector('#mute');
 
   SoundSystem(this.audioContext) : super(Aspect.getAspectForAllOf([SoundEffect]));
 
   @override
   void initialize() {
-    for (int i = 0; i < 3; i++) {
+    loadEffect(3, '179265__jorickhoofd__exploding-lightbulb-1-', 'explode');
+    loadEffect(2, 'woopwoop', 'gameover');
+  }
+
+  void loadEffect(int count, String fileName, String effectName) {
+    for (int i = 0; i < count; i++) {
       HttpRequest
-          .request('packages/zfx_action_7/assets/sfx/179265__jorickhoofd__exploding-lightbulb-1-$i.ogg',
+          .request('packages/zfx_action_7/assets/sfx/$fileName$i.ogg',
               responseType: 'arraybuffer')
           .then((request) {
         audioContext.decodeAudioData(request.response).then((buffer) {
-          sounds['explode'].add(buffer);
+          sounds[effectName].add(buffer);
         });
       });
     }

@@ -44,6 +44,7 @@ class Game extends GameBase {
         new ParticleRenderingSystem(ctx),
         new CanvasCleaningSystem(hudCanvas),
         new ScoreRenderingSystem(hudCtx),
+        new GameOverSystem(hudCtx),
       ],
       1: [
         new SoundSystem(audioContext),

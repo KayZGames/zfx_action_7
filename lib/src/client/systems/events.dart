@@ -2,8 +2,19 @@ part of client;
 
 class InputHandlingSystem extends GenericInputHandlingSystem {
   Mapper<Controller> cm;
+  GameStateManager gsm;
 
   InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller]));
+
+  @override
+  void initialize() {
+    super.initialize();
+    querySelector('#hud').onClick.listen((_) {
+      if (gsm.gameOver) {
+        gsm.restart();
+      }
+    });
+  }
 
   @override
   void processEntity(Entity entity) {

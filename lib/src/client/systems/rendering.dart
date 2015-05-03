@@ -294,6 +294,42 @@ class ScoreRenderingSystem extends VoidEntitySystem {
     ctx..save()
        ..fillStyle = 'grey'
        ..fillText('Score: ${gsm.score}', 700, 10)
+       ..fillText('Lives: ${gsm.lives}', 700, 30)
        ..restore();
   }
+}
+
+class GameOverSystem extends VoidEntitySystem {
+  GameStateManager gsm;
+  BeatFactorSystem bfs;
+
+  CanvasRenderingContext2D ctx;
+
+  GameOverSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    var fontSize = 200 - 5 * bfs.beatFactor;
+    var height = fontSize * 1.6;
+    ctx..save()
+       ..font = '${fontSize}px Verdana';
+
+    var gameWidth = ctx.measureText('GAME').width;
+    var overWidth = ctx.measureText('OVER').width;
+    ctx..fillStyle = 'red'
+       ..fillText('GAME', 400 - gameWidth/2, 300 - height)
+       ..fillText('OVER', 400 - overWidth/2, 250)
+       ..font = '40px Verdana'
+       ..strokeStyle = 'black'
+       ..fillStyle = '#DDCCCC';
+
+    var textWidth = ctx.measureText('click to try again').width;
+    ctx..strokeText('click to try again', 400 - textWidth/2, 500)
+       ..fillText('click to try again', 400 - textWidth/2, 500)
+       ..restore();
+
+  }
+
+  @override
+  bool checkProcessing() => gsm.gameOver;
 }

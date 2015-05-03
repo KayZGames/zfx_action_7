@@ -18,6 +18,7 @@ class MovementSystem extends EntityProcessingSystem {
 
 class BlockMovementSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
+  GameStateManager gsm;
 
   BlockMovementSystem() : super(Aspect.getAspectForAllOf([Position, BlockType]).exclude([StickyBlock]));
 
@@ -25,6 +26,9 @@ class BlockMovementSystem extends EntityProcessingSystem {
   void processEntity(Entity entity) {
     pm[entity].y -= 0.5 * world.delta;
   }
+
+  @override
+  bool checkProcessing() => !gsm.gameOver;
 }
 
 class BlockConversionSystem extends EntityProcessingSystem {
@@ -176,14 +180,17 @@ class ScoreSystem extends EntityProcessingSystem {
       gsm.score += s.amount;
       entity.deleteFromWorld();
 
-      if ((1.5 * gsm.score) >= bss.colors.length) {
+      if ((1.2 * gsm.score) >= bss.colors.length) {
         bss.addColor();
       }
-      if (3 + log(1.5 * gsm.score) >= gm.cols) {
+      if (1 + log(1.5 * gsm.score) >= gm.cols) {
         gm.addColumn();
       }
-      if (1 + log(gsm.score) >= gm.rows) {
+      if (3 + log(1.2 * gsm.score) >= gm.rows) {
         gm.addRow();
+      }
+      if (gsm.score % 10 == 0) {
+        gsm.lives++;
       }
     }
   }
@@ -191,6 +198,7 @@ class ScoreSystem extends EntityProcessingSystem {
 
 class BlockSpawnerSystem extends VoidEntitySystem {
   GridManager gm;
+  GameStateManager gsm;
 
   var spawnTimer = 1.0;
   var timeForNext = 1.0;
@@ -199,6 +207,10 @@ class BlockSpawnerSystem extends VoidEntitySystem {
 
   @override
   void initialize() {
+    initColorPool();
+  }
+
+  void initColorPool() {
     var startColor = colors[0];
     for (int i = 0; i < 9; i++) {
       colorPool.add((startColor + 0.1 * i) % 1.0);
@@ -225,12 +237,23 @@ class BlockSpawnerSystem extends VoidEntitySystem {
       colors.add(colorPool.removeLast());
     }
   }
+
+  @override
+  bool checkProcessing() => !gsm.gameOver;
+
+  void reset() {
+    spawnTimer = 1.0;
+    timeForNext = 1.0;
+    colors = [random.nextDouble()];
+    initColorPool();
+  }
 }
 
 
 class ControllerSystem extends EntityProcessingSystem {
   Mapper<Controller> cm;
   GridManager gm;
+  GameStateManager gsm;
 
   ControllerSystem() : super(Aspect.getAspectForAllOf([Controller]));
 
@@ -241,4 +264,7 @@ class ControllerSystem extends EntityProcessingSystem {
       gm.moveAllBlocks(c.direction);
     }
   }
+
+  @override
+  bool checkProcessing() => !gsm.gameOver;
 }

@@ -43,6 +43,7 @@ class GridManager extends Manager {
         matchIt(sbm[oldBlock], cm[oldBlock]);
       } else {
         oldBlock.deleteFromWorld();
+        gsm.blockOut();
       }
     }
   }
@@ -109,8 +110,37 @@ class GridManager extends Manager {
 
   double get posFactor => 0.4 * (0.4 + bfs.beatFactor / 100);
   double get sizeFactor => 1.6 * (0.8 + bfs.beatFactor / 50);
+
+  void reset() {
+    grid = <List<Entity>>[[null, null, null]];
+    cols = 1;
+    rows = 3;
+    colOffset = 0.0;
+  }
 }
 
 class GameStateManager extends Manager {
   int score = 0;
+  int lives = 3;
+  bool gameOver = false;
+  GridManager gm;
+  BlockSpawnerSystem bss;
+
+  void blockOut() {
+    lives--;
+    if (lives <= 0 && !gameOver) {
+      gameOver = true;
+      world.createAndAddEntity([new SoundEffect('gameover')]);
+    }
+  }
+
+  void restart() {
+    score = 0;
+    lives = 3;
+    gameOver = false;
+    world.deleteAllEntities();
+    gm.reset();
+    bss.reset();
+    world.createAndAddEntity([new Controller()]);
+  }
 }
