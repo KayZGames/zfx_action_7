@@ -174,7 +174,7 @@ class ScoreSystem extends EntityProcessingSystem {
       gsm.score += s.amount;
       entity.deleteFromWorld();
 
-      if ((2 * gsm.score) >= bss.colors.length) {
+      if ((1.5 * gsm.score) >= bss.colors.length) {
         bss.addColor();
       }
       if (3 + log(1.5 * gsm.score) >= gm.cols) {
@@ -192,7 +192,17 @@ class BlockSpawnerSystem extends VoidEntitySystem {
 
   var spawnTimer = 1.0;
   var timeForNext = 1.0;
+  List<double> colorPool = new List<double>();
   List<double> colors = [random.nextDouble()];
+
+  @override
+  void initialize() {
+    var startColor = colors[0];
+    for (int i = 0; i < 9; i++) {
+      colorPool.add((startColor + 0.1 * i) % 1.0);
+    }
+    colorPool.shuffle(random);
+  }
 
   @override
   void processSystem() {
@@ -209,18 +219,9 @@ class BlockSpawnerSystem extends VoidEntitySystem {
   }
 
   void addColor() {
-    double nextColor;
-    double currentDist = 0.0;
-    var counter = 0;
-    do {
-      nextColor = random.nextDouble();
-      currentDist = colors.fold(1.0, (minDist, color) {
-        var distance = (0.5 - (color - nextColor - 0.5).abs()).abs();
-        return min(minDist, distance);
-      });
-      counter++;
-    } while (currentDist < 0.05 && counter < 10);
-    colors.add(nextColor);
+    if (colorPool.isNotEmpty) {
+      colors.add(colorPool.removeLast());
+    }
   }
 }
 
