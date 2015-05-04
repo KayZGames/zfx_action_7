@@ -207,53 +207,40 @@ a1[e]=b}else if(typeof d==="function"){m[b=e]=d
 h.push(e)
 init.globalFunctions[e]=d}else if(d.constructor===Array)addStubs(m,d,e,true,h)
 else{b=e
-processClassData(e,d,a3)}}}function addStubs(b5,b6,b7,b8,b9){var g=0,f=b6[g],e
-if(typeof f=="string")e=b6[++g]
+processClassData(e,d,a3)}}}function addStubs(b1,b2,b3,b4,b5){var g=0,f=b2[g],e
+if(typeof f=="string")e=b2[++g]
 else{e=f
-f=b7}var d=[b5[b7]=b5[f]=e]
-e.$stubName=b7
-b9.push(b7)
-for(;g<b6.length;g+=2){e=b6[g+1]
+f=b3}var d=[b1[b3]=b1[f]=e]
+e.$stubName=b3
+b5.push(b3)
+for(;g<b2.length;g+=2){e=b2[g+1]
 if(typeof e!="function")break
-e.$stubName=b6[g+2]
+e.$stubName=b2[g+2]
 d.push(e)
-if(e.$stubName){b5[e.$stubName]=e
-b9.push(e.$stubName)}}g++
-for(var c=0;c<d.length;g++,c++)d[c].$callName=b6[g]
-var b=b6[g]
-b6=b6.slice(++g)
-var a0=b6[0]
+if(e.$stubName){b1[e.$stubName]=e
+b5.push(e.$stubName)}}g++
+for(var c=0;c<d.length;g++,c++)d[c].$callName=b2[g]
+var b=b2[g]
+b2=b2.slice(++g)
+var a0=b2[0]
 var a1=a0>>1
 var a2=(a0&1)===1
 var a3=a0===3
 var a4=a0===1
-var a5=b6[1]
+var a5=b2[1]
 var a6=a5>>1
 var a7=(a5&1)===1
 var a8=a1+a6!=d[0].length
-var a9=b6[2]
+var a9=b2[2]
 var b0=2*a6+a1+3
-if(b){e=tearOff(d,b6,b8,b7,a8)
-b5[b7].$getter=e
+if(b){e=tearOff(d,b2,b4,b3,a8)
+b1[b3].$getter=e
 e.$getterStub=true
-if(b8){init.globalFunctions[b7]=e
-b9.push(b)}b5[b]=e
+if(b4){init.globalFunctions[b3]=e
+b5.push(b)}b1[b]=e
 d.push(e)
 e.$stubName=b
-e.$callName=null}var b1=b6.length>b0
-if(b1){d[0].$reflectable=1
-d[0].$reflectionInfo=b6
-for(var c=1;c<d.length;c++){d[c].$reflectable=2
-d[c].$reflectionInfo=b6}var b2=b8?init.mangledGlobalNames:init.mangledNames
-var b3=b6[b0]
-var b4=b3
-if(b)b2[b]=b4
-if(a3)b4+="="
-else if(!a4)b4+=":"+(a1+a6)
-b2[b7]=b4
-d[0].$reflectionName=b4
-d[0].$metadataIndex=b0+1
-if(a6)b5[b3+"*"]=d[0]}}function tearOffGetter(b,c,d,e){return e?new Function("funcs","reflectionInfo","name","H","c","return function tearOff_"+d+y+++"(x) {"+"if (c === null) c = H.qm("+"this, funcs, reflectionInfo, false, [x], name);"+"return new c(this, funcs[0], x, name);"+"}")(b,c,d,H,null):new Function("funcs","reflectionInfo","name","H","c","return function tearOff_"+d+y+++"() {"+"if (c === null) c = H.qm("+"this, funcs, reflectionInfo, false, [], name);"+"return new c(this, funcs[0], null, name);"+"}")(b,c,d,H,null)}function tearOff(b,c,d,e,f){var g
+e.$callName=null}}function tearOffGetter(b,c,d,e){return e?new Function("funcs","reflectionInfo","name","H","c","return function tearOff_"+d+y+++"(x) {"+"if (c === null) c = H.qm("+"this, funcs, reflectionInfo, false, [x], name);"+"return new c(this, funcs[0], x, name);"+"}")(b,c,d,H,null):new Function("funcs","reflectionInfo","name","H","c","return function tearOff_"+d+y+++"() {"+"if (c === null) c = H.qm("+"this, funcs, reflectionInfo, false, [], name);"+"return new c(this, funcs[0], null, name);"+"}")(b,c,d,H,null)}function tearOff(b,c,d,e,f){var g
 return d?function(){if(g===void 0)g=H.qm(this,b,c,true,[],e).prototype
 return g}:tearOffGetter(b,c,e,f)}var y=0
 if(!init.libraries)init.libraries=[]
