@@ -18,6 +18,7 @@ part 'src/client/systems/sound.dart';
 class Game extends GameBase {
   AudioContext audioContext = new AudioContext();
   Uint8List byteFrequencyData = new Uint8List(512);
+  Uint8List beatByteFrequencyData = new Uint8List(16);
   CanvasElement hudCanvas;
   CanvasRenderingContext2D hudCtx;
 
@@ -35,9 +36,9 @@ class Game extends GameBase {
   Map<int, List<EntitySystem>> getSystems() {
     return {
       0: [
-        new BackgroundMusicSystem(audioContext, byteFrequencyData),
-        new BeatFactorSystem(byteFrequencyData),
-        new MusicVisualisationSystem(ctx, byteFrequencyData),
+        new BackgroundMusicSystem(audioContext, beatByteFrequencyData, byteFrequencyData),
+        new BeatFactorSystem(beatByteFrequencyData),
+        new MusicVisualisationSystem(ctx, beatByteFrequencyData),
         new EqualizerSystem(ctx, byteFrequencyData),
         new GridRenderingSystem(ctx),
         new BlockRenderingSystem(ctx),

@@ -6,21 +6,24 @@ class BackgroundMusicSystem extends VoidEntitySystem {
 
   AudioContext audioContext;
   AnalyserNode analyser;
+  AnalyserNode beatAnalyser;
   AudioBuffer kick;
   AudioBuffer snare;
-  AudioBuffer hihat;
+  Uint8List beatByteFrequencyData;
   Uint8List byteFrequencyData;
   InputElement mute = querySelector('#mute');
   InputElement musicFile = querySelector('#music');
   AudioBufferSourceNode source;
   bool disconnected = false;
 
-  BackgroundMusicSystem(this.audioContext, this.byteFrequencyData);
+  BackgroundMusicSystem(this.audioContext, this.beatByteFrequencyData, this.byteFrequencyData);
 
   @override
   void initialize() {
     analyser = audioContext.createAnalyser();
     analyser.fftSize = byteFrequencyData.length * 2;
+    beatAnalyser = audioContext.createAnalyser();
+    beatAnalyser.fftSize = beatByteFrequencyData.length * 2;
     var sounds = <Future<HttpRequest>>[];
     sounds.add(HttpRequest.request('packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg',
         responseType: 'arraybuffer'));
@@ -36,12 +39,14 @@ class BackgroundMusicSystem extends VoidEntitySystem {
           source.connectNode(audioContext.destination);
         }
         source.connectNode(analyser);
+        source.connectNode(beatAnalyser);
         source.loop = true;
         source.start(0);
         mute.onChange.listen((data) {
           if (mute.checked) {
             source.disconnect(0);
             source.connectNode(analyser);
+            source.connectNode(beatAnalyser);
           } else {
             source.connectNode(audioContext.destination);
           }
@@ -80,16 +85,19 @@ class BackgroundMusicSystem extends VoidEntitySystem {
   @override
   void processSystem() {
     analyser.getByteFrequencyData(byteFrequencyData);
+    beatAnalyser.getByteFrequencyData(beatByteFrequencyData);
     if (gsm.gameOver && !disconnected) {
       var gain = audioContext.createGain()..gain.linearRampToValueAtTime(0.0001, audioContext.currentTime + 2.0);
       gain.connectNode(audioContext.destination);
       gain.connectNode(analyser);
+      gain.connectNode(beatAnalyser);
       source.disconnect(0);
       source.connectNode(gain);
       disconnected = true;
     } else if (!gsm.gameOver && disconnected) {
       source.disconnect(0);
       source.connectNode(analyser);
+      source.connectNode(beatAnalyser);
       source.connectNode(audioContext.destination);
       disconnected = false;
     }
