@@ -1951,7 +1951,7 @@ return a+(b-a)*6*c}if(z.w(c,0.5))return b
 if(z.w(c,0.6666666666666666)){if(typeof c!=="number")return H.o(c)
 return a+(b-a)*(0.6666666666666666-c)*6}return a},
 L:{
-"^":"Vf;cy,db,dx,dy,Q,a,b,c,d,e,f,r,x,y,z,ch,cx",
+"^":"Vf;cy,db,dx,dy,fr,Q,a,b,c,d,e,f,r,x,y,z,ch,cx",
 hV:function(){var z,y,x
 z=F.im()
 y=this.x
@@ -1959,159 +1959,160 @@ x=y.mM([z])
 y.b.h(0,x)},
 uw:function(){var z,y,x,w,v,u,t,s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b
 z=this.cy
-y=this.db
-x=document.querySelector("#mute")
-w=document.querySelector("#music")
-v=D.bL(16,!1)
-u=Array(16)
-u.fixed$length=Array
-u=new F.dV(null,null,z,null,null,null,null,y,x,w,null,!1,0,null,new S.dX(v,!1,u,0),0,0,0,null,null,null)
-u.l7(new S.Yl(0,0,0))
-v=D.bL(16,!1)
-w=Array(16)
-w.fixed$length=Array
-w=new F.nA(1,5,y,0,null,new S.dX(v,!1,w,0),0,0,0,null,null,null)
-w.l7(new S.Yl(0,0,0))
-v=this.a
-x=document.querySelector("#preventHeadache")
-t=D.bL(16,!1)
-s=Array(16)
-s.fixed$length=Array
-s=new F.Nh(y,v,x,0,null,new S.dX(t,!1,s,0),0,0,0,null,null,null)
-s.l7(new S.Yl(0,0,0))
-t=D.bL(16,!1)
-x=Array(16)
-x.fixed$length=Array
-x=new F.nt(y,null,null,null,null,null,v,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(t,!1,x,0),0,0,0,null,null,null)
-x.l7(new S.Yl(0,0,0))
-x.ch=new Float32Array(H.T(6144))
-x.cx=new Uint16Array(H.T(3072))
-x.cy=[new L.IQ("aPosition",2),new L.IQ("aValue",1)]
-x.db=0.00390625
-x.dx=0.0033333333333333335
-t=D.bL(16,!1)
-y=Array(16)
-y.fixed$length=Array
-y=new F.Tj(null,null,null,null,null,[-0.04,-0.04,0.04,0.04],[-0.02,0.02,0.02,-0.02],v,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(t,!1,y,0),0,0,0,null,null,null)
-y.l7(new S.Yl(0,0,0))
-y.db=[new L.IQ("aPosition",2)]
-t=S.Eg([C.iB,C.R3,C.Cs])
-r=D.bL(16,!1)
-q=Array(16)
-q.fixed$length=Array
-q=new F.wx(null,null,null,null,null,null,[-0.04,-0.04,0.04,0.04],[-0.02,0.02,0.02,-0.02],30,v,0,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(r,!1,q,0),t.Q,t.a,t.b,null,null,null)
-q.l7(t)
-q.dy=[new L.IQ("aPosition",2),new L.IQ("aColor",3)]
-t=S.Eg([C.iB,C.R3,C.Pk])
-r=D.bL(16,!1)
-p=Array(16)
-p.fixed$length=Array
-p=new F.u8(null,null,null,null,null,v,0,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(r,!1,p,0),t.Q,t.a,t.b,null,null,null)
-p.l7(t)
-p.dx=[new L.IQ("aPosition",2),new L.IQ("aColor",3)]
-t=this.dx
-r=D.bL(16,!1)
+y=this.dx
+x=this.db
+w=document.querySelector("#mute")
+v=document.querySelector("#music")
+u=D.bL(16,!1)
+t=Array(16)
+t.fixed$length=Array
+t=new F.dV(null,null,z,null,null,null,null,y,x,w,v,null,!1,0,null,new S.dX(u,!1,t,0),0,0,0,null,null,null)
+t.l7(new S.Yl(0,0,0))
+u=D.bL(16,!1)
 v=Array(16)
 v.fixed$length=Array
-v=new L.Q0(t,"white",0,null,new S.dX(r,!1,v,0),0,0,0,null,null,null)
+v=new F.nA(1,5,y,0,null,new S.dX(u,!1,v,0),0,0,0,null,null,null)
 v.l7(new S.Yl(0,0,0))
-r=this.dy
-t=D.bL(16,!1)
+u=this.a
+w=document.querySelector("#preventHeadache")
+s=D.bL(16,!1)
+r=Array(16)
+r.fixed$length=Array
+r=new F.Nh(y,u,w,0,null,new S.dX(s,!1,r,0),0,0,0,null,null,null)
+r.l7(new S.Yl(0,0,0))
+s=D.bL(16,!1)
+w=Array(16)
+w.fixed$length=Array
+w=new F.nt(x,null,null,null,null,null,u,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(s,!1,w,0),0,0,0,null,null,null)
+w.l7(new S.Yl(0,0,0))
+w.ch=new Float32Array(H.T(6144))
+w.cx=new Uint16Array(H.T(3072))
+w.cy=[new L.IQ("aPosition",2),new L.IQ("aValue",1)]
+w.db=0.00390625
+w.dx=0.0033333333333333335
+s=D.bL(16,!1)
+x=Array(16)
+x.fixed$length=Array
+x=new F.Tj(null,null,null,null,null,[-0.04,-0.04,0.04,0.04],[-0.02,0.02,0.02,-0.02],u,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(s,!1,x,0),0,0,0,null,null,null)
+x.l7(new S.Yl(0,0,0))
+x.db=[new L.IQ("aPosition",2)]
+s=S.Eg([C.iB,C.R3,C.Cs])
+y=D.bL(16,!1)
+q=Array(16)
+q.fixed$length=Array
+q=new F.wx(null,null,null,null,null,null,[-0.04,-0.04,0.04,0.04],[-0.02,0.02,0.02,-0.02],30,u,0,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(y,!1,q,0),s.Q,s.a,s.b,null,null,null)
+q.l7(s)
+q.dy=[new L.IQ("aPosition",2),new L.IQ("aColor",3)]
+s=S.Eg([C.iB,C.R3,C.Pk])
+y=D.bL(16,!1)
+p=Array(16)
+p.fixed$length=Array
+p=new F.u8(null,null,null,null,null,u,0,null,null,null,null,null,P.A(P.I,P.h4),!0,0,null,new S.dX(y,!1,p,0),s.Q,s.a,s.b,null,null,null)
+p.l7(s)
+p.dx=[new L.IQ("aPosition",2),new L.IQ("aColor",3)]
+s=this.dy
+y=D.bL(16,!1)
+u=Array(16)
+u.fixed$length=Array
+u=new L.Q0(s,"white",0,null,new S.dX(y,!1,u,0),0,0,0,null,null,null)
+u.l7(new S.Yl(0,0,0))
+y=this.fr
+s=D.bL(16,!1)
 o=Array(16)
 o.fixed$length=Array
-o=new F.FY(r,null,0,null,new S.dX(t,!1,o,0),0,0,0,null,null,null)
+o=new F.FY(y,null,0,null,new S.dX(s,!1,o,0),0,0,0,null,null,null)
 o.l7(new S.Yl(0,0,0))
-t=this.dy
-r=D.bL(16,!1)
+s=this.fr
+y=D.bL(16,!1)
 n=Array(16)
 n.fixed$length=Array
-n=new F.QN(null,null,t,0,null,new S.dX(r,!1,n,0),0,0,0,null,null,null)
+n=new F.QN(null,null,s,0,null,new S.dX(y,!1,n,0),0,0,0,null,null,null)
 n.l7(new S.Yl(0,0,0))
-r=P.B(["explode",[],"gameover",[]],null,null)
-t=document.querySelector("#mute")
+y=P.B(["explode",[],"gameover",[]],null,null)
+s=document.querySelector("#mute")
 m=S.Eg([C.yA])
 l=D.bL(16,!1)
 k=Array(16)
 k.fixed$length=Array
-k=new F.kC(null,null,z,r,t,0,null,new S.dX(l,!1,k,0),m.Q,m.a,m.b,null,null,null)
+k=new F.kC(null,null,z,y,s,0,null,new S.dX(l,!1,k,0),m.Q,m.a,m.b,null,null,null)
 k.l7(m)
 m=S.Eg([C.kE])
 l=P.tM([38,40,37,39,32],null)
-t=D.bL(16,!1)
-r=Array(16)
-r.fixed$length=Array
-r=new F.LH(null,null,null,null,l,P.A(P.KN,P.a2),P.A(P.KN,P.a2),0,null,new S.dX(t,!1,r,0),m.Q,m.a,m.b,null,null,null)
-r.l7(m)
+s=D.bL(16,!1)
+y=Array(16)
+y.fixed$length=Array
+y=new F.LH(null,null,null,null,l,P.A(P.KN,P.a2),P.A(P.KN,P.a2),0,null,new S.dX(s,!1,y,0),m.Q,m.a,m.b,null,null,null)
+y.l7(m)
 m=S.Eg([C.kE])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 l=Array(16)
 l.fixed$length=Array
-l=new F.Wu(null,null,null,0,null,new S.dX(t,!1,l,0),m.Q,m.a,m.b,null,null,null)
+l=new F.Wu(null,null,null,0,null,new S.dX(s,!1,l,0),m.Q,m.a,m.b,null,null,null)
 l.l7(m)
 m=H.J([],[P.CP])
-t=$.pa().w7()
+s=$.pa().w7()
 z=D.bL(16,!1)
 j=Array(16)
 j.fixed$length=Array
-j=new F.Pw(null,null,1,3,m,[t],1,0,null,new S.dX(z,!1,j,0),0,0,0,null,null,null)
+j=new F.Pw(null,null,1,3,m,[s],1,0,null,new S.dX(z,!1,j,0),0,0,0,null,null,null)
 j.l7(new S.Yl(0,0,0))
 z=S.Eg([C.iB,C.e9])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 m=Array(16)
 m.fixed$length=Array
-m=new F.Ua(null,null,0,null,new S.dX(t,!1,m,0),z.Q,z.a,z.b,null,null,null)
+m=new F.Ua(null,null,0,null,new S.dX(s,!1,m,0),z.Q,z.a,z.b,null,null,null)
 m.l7(z)
 z=S.Eg([C.iB,C.Cs])
 z.a=z.el(z.a,[C.HJ])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 i=Array(16)
 i.fixed$length=Array
-i=new F.ai(null,null,0.2,1,0,null,new S.dX(t,!1,i,0),z.Q,z.a,z.b,null,null,null)
+i=new F.ai(null,null,0.2,1,0,null,new S.dX(s,!1,i,0),z.Q,z.a,z.b,null,null,null)
 i.l7(z)
 z=S.Eg([C.iB,C.uW])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 h=Array(16)
 h.fixed$length=Array
-h=new F.dU(null,null,null,0,null,new S.dX(t,!1,h,0),z.Q,z.a,z.b,null,null,null)
+h=new F.dU(null,null,null,0,null,new S.dX(s,!1,h,0),z.Q,z.a,z.b,null,null,null)
 h.l7(z)
 z=S.Eg([C.iB,C.uW])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 g=Array(16)
 g.fixed$length=Array
-g=new F.CV(null,null,null,0,null,new S.dX(t,!1,g,0),z.Q,z.a,z.b,null,null,null)
+g=new F.CV(null,null,null,0,null,new S.dX(s,!1,g,0),z.Q,z.a,z.b,null,null,null)
 g.l7(z)
 z=S.Eg([C.iB,C.HJ])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 f=Array(16)
 f.fixed$length=Array
-f=new F.fk(null,null,null,0,null,new S.dX(t,!1,f,0),z.Q,z.a,z.b,null,null,null)
+f=new F.fk(null,null,null,0,null,new S.dX(s,!1,f,0),z.Q,z.a,z.b,null,null,null)
 f.l7(z)
 z=S.Eg([C.e9])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 e=Array(16)
 e.fixed$length=Array
-e=new F.Yd(null,0,null,new S.dX(t,!1,e,0),z.Q,z.a,z.b,null,null,null)
+e=new F.Yd(null,0,null,new S.dX(s,!1,e,0),z.Q,z.a,z.b,null,null,null)
 e.l7(z)
 z=S.Eg([C.iB])
 z.a=z.el(z.a,[C.HJ])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 d=Array(16)
 d.fixed$length=Array
-d=new F.It(null,null,0,null,new S.dX(t,!1,d,0),z.Q,z.a,z.b,null,null,null)
+d=new F.It(null,null,0,null,new S.dX(s,!1,d,0),z.Q,z.a,z.b,null,null,null)
 d.l7(z)
 z=S.Eg([C.Ss,C.iB,C.R3])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 c=Array(16)
 c.fixed$length=Array
-c=new F.Fw(null,null,null,null,null,0,null,new S.dX(t,!1,c,0),z.Q,z.a,z.b,null,null,null)
+c=new F.Fw(null,null,null,null,null,0,null,new S.dX(s,!1,c,0),z.Q,z.a,z.b,null,null,null)
 c.l7(z)
 z=S.Eg([C.J4])
-t=D.bL(16,!1)
+s=D.bL(16,!1)
 b=Array(16)
 b.fixed$length=Array
-b=new F.jO(null,null,null,null,null,0,null,new S.dX(t,!1,b,0),z.Q,z.a,z.b,null,null,null)
+b=new F.jO(null,null,null,null,null,0,null,new S.dX(s,!1,b,0),z.Q,z.a,z.b,null,null,null)
 b.l7(z)
-return P.B([0,[u,w,s,x,y,q,p,v,o,n],1,[k,r,l,j,m,i,h,g,f,e,d,c,b]],null,null)},
+return P.B([0,[t,v,r,w,x,q,p,u,o,n],1,[k,y,l,j,m,i,h,g,f,e,d,c,b]],null,null)},
 mB:function(){this.x.Vw(new F.L6(null,null,null,null,null,H.J([[null,null,null]],[[P.zM,S.qn]]),1,3,0,null))
 this.x.Vw(new F.Hw(0,3,!1,null,null,null,null))}},
 LH:{
@@ -2155,9 +2156,9 @@ if(J.K0(this.ch)===!0){J.Np(z,0,0,0,1)
 z.clear(16640)
 z=document.querySelector("body").style
 z.backgroundColor="black"}else{y=this.y
-x=J.xH(C.Jm.Mu(y,0,256).qx(0,this.gaQ()),512)
-w=J.xH(C.Jm.Mu(y,128,384).qx(0,this.gaQ()),512)
-v=J.xH(C.Jm.Mu(y,256,512).qx(0,this.gaQ()),512)
+x=J.xH(C.Jm.Mu(y,0,8).qx(0,this.gaQ()),16)
+w=J.xH(C.Jm.Mu(y,4,12).qx(0,this.gaQ()),16)
+v=J.xH(C.Jm.Mu(y,8,16).qx(0,this.gaQ()),16)
 if(typeof x!=="number")return x.S()
 if(typeof w!=="number")return w.S()
 if(typeof v!=="number")return v.S()
@@ -2636,7 +2637,7 @@ eQ:function(){this.UC()
 this.z=this.a.r.p(0,C.Ee)
 this.y=this.a.y.p(0,C.SZ)}},
 dV:{
-"^":"GN;y,z,ch,LF:cx<,cy,db,dx,dy,fr,fx,fy,go,Q,a,b,c,d,e,f,r,x",
+"^":"GN;y,z,ch,LF:cx<,cy,db,dx,dy,fr,fx,fy,go,id,Q,a,b,c,d,e,f,r,x",
 eQ:function(){var z,y,x,w,v,u
 this.y=this.a.r.p(0,C.Ee)
 this.z=this.a.y.p(0,C.SZ)
@@ -2644,11 +2645,14 @@ z=this.ch
 y=z.createAnalyser()
 this.cx=y
 y.fftSize=1024
+y=z.createAnalyser()
+this.cy=y
+y.fftSize=32
 x=H.J([],[[P.b8,W.zU]])
 x.push(W.lt("packages/zfx_action_7/assets/sfx/237581__frankum__ambient-electro-loop.ogg",null,null,null,null,"arraybuffer",null,null))
-this.fy=z.createBufferSource()
+this.go=z.createBufferSource()
 P.pH(x,null,!1).ml(new F.rt(this))
-z=this.fx
+z=this.fy
 J.R(z).saH(z,"")
 w=H.J([],[P.I])
 v=W.Lb(null)
@@ -2659,8 +2663,9 @@ z.accept=C.Nm.zV(w,",")
 z=C.Sw.gi9(z)
 H.J(new W.Ov(0,z.Q,z.a,W.V(new F.V3(this)),z.b),[H.Kp(z,0)]).DN()},
 ce:function(){var z,y,x,w
-this.cx.getByteFrequencyData(this.dy)
-if(this.z.gA0()&&!this.go){z=this.ch
+this.cx.getByteFrequencyData(this.fr)
+this.cy.getByteFrequencyData(this.dy)
+if(this.z.gA0()&&!this.id){z=this.ch
 y=J.Sp(z)
 x=y.gain
 w=z.currentTime
@@ -2668,12 +2673,14 @@ if(typeof w!=="number")return w.g()
 x.linearRampToValueAtTime(0.0001,w+2)
 y.connect(z.destination,0,0)
 y.connect(this.cx,0,0)
-this.fy.disconnect(0)
-this.fy.connect(y,0,0)
-this.go=!0}else if(!this.z.gA0()&&this.go){this.fy.disconnect(0)
-this.fy.connect(this.cx,0,0)
-this.fy.connect(this.ch.destination,0,0)
-this.go=!1}}},
+y.connect(this.cy,0,0)
+this.go.disconnect(0)
+this.go.connect(y,0,0)
+this.id=!0}else if(!this.z.gA0()&&this.id){this.go.disconnect(0)
+this.go.connect(this.cx,0,0)
+this.go.connect(this.cy,0,0)
+this.go.connect(this.ch.destination,0,0)
+this.id=!1}}},
 rt:{
 "^":"r:2;Q",
 $1:function(a){var z,y
@@ -2688,12 +2695,13 @@ Ql:{
 "^":"r:2;Q",
 $1:function(a){var z,y,x,w
 z=this.Q
-z.fy.buffer=J.Tf(a,0)
-y=z.fr
+z.go.buffer=J.Tf(a,0)
+y=z.fx
 x=J.R(y)
-if(x.gd4(y)!==!0)z.fy.connect(z.ch.destination,0,0)
-z.fy.connect(z.cx,0,0)
-w=z.fy
+if(x.gd4(y)!==!0)z.go.connect(z.ch.destination,0,0)
+z.go.connect(z.cx,0,0)
+z.go.connect(z.cy,0,0)
+w=z.go
 w.loop=!0;(w&&C.PV).xk(w,0)
 y=x.gi9(y)
 H.J(new W.Ov(0,y.Q,y.a,W.V(new F.Dx(z)),y.b),[H.Kp(y,0)]).DN()}},
@@ -2701,10 +2709,11 @@ Dx:{
 "^":"r:2;Q",
 $1:function(a){var z,y,x
 z=this.Q
-y=J.K0(z.fr)
-x=z.fy
+y=J.K0(z.fx)
+x=z.go
 if(y===!0){x.disconnect(0)
-z.fy.connect(z.cx,0,0)}else x.connect(z.ch.destination,0,0)}},
+z.go.connect(z.cx,0,0)
+z.go.connect(z.cy,0,0)}else x.connect(z.ch.destination,0,0)}},
 V3:{
 "^":"r:2;Q",
 $1:function(a){var z,y,x
@@ -2724,7 +2733,7 @@ J.to(y.ch,J.Zl(C.Uy.gyG(z))).ml(new F.YO(y))}}},
 YO:{
 "^":"r:2;Q",
 $1:function(a){var z=this.Q
-z.fy.buffer=a
+z.go.buffer=a
 z.y.sC0(1)}},
 kC:{
 "^":"HK;y,z,ch,cx,cy,Q,a,b,c,d,e,f,r,x",
@@ -6760,7 +6769,7 @@ this.y=z}},
 nA:{
 "^":"GN;qt:y<,C0:z?,ch,Q,a,b,c,d,e,f,r,x",
 ce:function(){var z,y
-z=J.x4(C.Jm.qx(this.ch,this.gaQ()),512)
+z=J.x4(C.Jm.qx(this.ch,this.gaQ()),16)
 this.y=z
 z=P.u(this.z,z)
 this.z=z
@@ -7133,25 +7142,26 @@ return b},
 gx:function(a){return this.Q[0]},
 gy:function(a){return this.Q[1]}}}],["","",,Q,{
 "^":"",
-Q:[function(){var z,y,x,w,v,u
+Q:[function(){var z,y,x,w,v,u,t
 z=new (window.AudioContext||window.webkitAudioContext)()
 y=new Uint8Array(H.T(512))
-x=document.querySelector("canvas")
-w=H.U(document.querySelector("canvas"),"$isN")
-w.toString
-v=P.B(["alpha",!0,"depth",!0,"stencil",!1,"antialias",!0,"premultipliedAlpha",!0,"preserveDrawingBuffer",!1],null,null)
-u=(w&&C.p1).Y(w,"webgl",v)
-if(u==null)u=C.p1.Y(w,"experimental-webgl",v)
-w=u
-w=new F.L(z,y,null,null,x,w,new L.S("zfx_action_7",null),null,null,800,600,!0,null,null,null,null,!1)
-w.LO("zfx_action_7","canvas",800,600,null,null,!0)
-x=document.querySelector("#hud")
-w.dx=x
-x=J.X(x)
-w.dy=x
-x.textBaseline="top"
-x.font="16px Verdana"
-w.wE(0)},"$0","ao",0,0,1]},1],]
+x=new Uint8Array(H.T(16))
+w=document.querySelector("canvas")
+v=H.U(document.querySelector("canvas"),"$isN")
+v.toString
+u=P.B(["alpha",!0,"depth",!0,"stencil",!1,"antialias",!0,"premultipliedAlpha",!0,"preserveDrawingBuffer",!1],null,null)
+t=(v&&C.p1).Y(v,"webgl",u)
+if(t==null)t=C.p1.Y(v,"experimental-webgl",u)
+v=t
+v=new F.L(z,y,x,null,null,w,v,new L.S("zfx_action_7",null),null,null,800,600,!0,null,null,null,null,!1)
+v.LO("zfx_action_7","canvas",800,600,null,null,!0)
+w=document.querySelector("#hud")
+v.dy=w
+w=J.X(w)
+v.fr=w
+w.textBaseline="top"
+w.font="16px Verdana"
+v.wE(0)},"$0","ao",0,0,1]},1],]
 setupProgram(dart)
 J.Qc=function(a){if(typeof a=="number")return J.F.prototype
 if(typeof a=="string")return J.E.prototype
