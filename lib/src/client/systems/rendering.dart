@@ -50,32 +50,36 @@ class EqualizerSystem extends VoidWebGlRenderingSystem {
   void render() {
     for (int i = 0; i < byteFrequencyData.length; i++) {
       var index = i * 3 * 4;
-      items[index + 0] = -byteFrequencyData[i] * height;
-      items[index + 1] = 1.0 - i * width;
+      items[index + 0] = -byteFrequencyData[i] * width;
+      items[index + 1] = 1.0 - i * height;
       items[index + 2] = byteFrequencyData[i].toDouble();
 
-      items[index + 3] = -byteFrequencyData[i] * height;
-      items[index + 4] = 1.0 - i * width - width;
+      items[index + 3] = -byteFrequencyData[i] * width;
+      items[index + 4] = 1.0 - i * height - height;
       items[index + 5] = byteFrequencyData[i].toDouble();
 
-      items[index + 6] = byteFrequencyData[i] * height;
-      items[index + 7] = 1.0 - i * width - width;
+      items[index + 6] = byteFrequencyData[i] * width;
+      items[index + 7] = 1.0 - i * height - height;
       items[index + 8] = byteFrequencyData[i].toDouble();
 
-      items[index + 9] = byteFrequencyData[i] * height;
-      items[index + 10] = 1.0 - i * width;
+      items[index + 9] = byteFrequencyData[i] * width;
+      items[index + 10] = 1.0 - i * height;
       items[index + 11] = byteFrequencyData[i].toDouble();
 
       indices[i * 6] = index;
       indices[i * 6 + 1] = index + 3;
       indices[i * 6 + 2] = index + 6;
       indices[i * 6 + 3] = index;
-      indices[i * 6 + 4] = index + 6;
+      indices[i * 6 + 4] = index + 3;
       indices[i * 6 + 5] = index + 9;
     }
     bufferElements(attributes, items, indices);
 
     gl.drawElements(RenderingContext.TRIANGLES, byteFrequencyData.length * 2, RenderingContext.UNSIGNED_SHORT, 0);
+
+    var aColor = gl.getUniformLocation(program, 'uColor');
+    var color = hslToRgb(time / 25.6 % 1, 0.8, 0.8);
+    gl.uniform3fv(aColor, new Float32List.fromList(color));
   }
 
   @override
@@ -108,7 +112,7 @@ class BlockRenderingSystem extends WebGlRenderingSystem {
     var p = pm[entity];
     var c = cm[entity];
     var sizeFactor = 0.8 + bfs.beatFactor / 50;
-    var rgbOuter = hslToRgb(c.h, c.s * sizeFactor, c.l * sizeFactor / 2);
+    var rgbOuter = hslToRgb(c.h + 0.1, c.s * sizeFactor, c.l * sizeFactor / 2);
     var rgb = hslToRgb(c.h, (c.s - 0.1) * sizeFactor, c.l);
 
     var offset = 5 * 4 * 2 * index;
